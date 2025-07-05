@@ -174,8 +174,10 @@ class GenerateCommand {
     } else {
       result.add('  $controllerClassName(super.context);');
     }
-    result.add('  String name = "Home";');
-    result.add('  String content = "Home has not yet implemented";');
+    result.add('  String name = "${_snakeToPascal(pageName)}";');
+    result.add(
+      '  String content = "${_snakeToPascal(pageName)} has not yet implemented";',
+    );
     result.add('');
     result.add('  @override');
     result.add('  void onInit() {');
