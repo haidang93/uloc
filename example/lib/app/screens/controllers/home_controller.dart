@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:uloc/uloc.dart';
 
 class HomeController extends ULoCProvider {
@@ -19,5 +21,4 @@ class HomeController extends ULoCProvider {
   void onDispose() {
     super.onDispose();
   }
-
 }
