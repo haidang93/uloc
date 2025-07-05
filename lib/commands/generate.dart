@@ -3,12 +3,12 @@
 import 'dart:io';
 
 class GenerateCommand {
-  final List<String> args;
-  GenerateCommand(this.args);
+  final _Command _command;
+  GenerateCommand(List<String> args) : _command = _Command(args);
 
   void run() async {
     try {
-      switch (args[0]) {
+      switch (_command.command) {
         case 'gen':
           gen();
           break;
@@ -44,9 +44,10 @@ class GenerateCommand {
     final pathSeparator = Platform.pathSeparator;
     Directory dir = Directory(['lib', 'app', 'screens'].join(pathSeparator));
     String pageName = '';
+    List<String> pageParameters = [];
 
-    if (args.length >= 2 && args[1] != '') {
-      pageName = args[1];
+    if (_command.length >= 2 && (_command.get(1)?.isNotEmpty ?? false)) {
+      pageName = _command.get(1) ?? '';
       final regex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
       if (regex.hasMatch(pageName)) {
         throw Exception(
@@ -57,10 +58,17 @@ class GenerateCommand {
       throw Exception('page name must be provided');
     }
 
-    if (args.length >= 3 && args[2] != '') {
+    if (_command.param['dir']?.isNotEmpty ?? false) {
       dir = Directory(
-        args[2].replaceAll('/', pathSeparator).replaceAll('\\', pathSeparator),
+        _command.param['dir']
+                ?.replaceAll('/', pathSeparator)
+                .replaceAll('\\', pathSeparator) ??
+            '',
       );
+    }
+
+    if (_command.param['params']?.isNotEmpty ?? false) {
+      pageParameters = _command.param['params']?.split(',') ?? [];
     }
 
     String viewName = '${pageName.toLowerCase()}_page';
@@ -145,7 +153,16 @@ class GenerateCommand {
     result.add("import 'package:uloc/uloc.dart';");
     result.add('');
     result.add('class $controllerClassName extends ULoCProvider {');
-    result.add('  $controllerClassName(super.context);');
+    if (pageParameters.isNotEmpty) {
+      for (var paramName in pageParameters) {
+        result.add('  final String $paramName;');
+      }
+      result.add(
+        '  $controllerClassName(super.context, ${pageParameters.map((e) => 'this.$e').join(', ')});',
+      );
+    } else {
+      result.add('  $controllerClassName(super.context);');
+    }
     result.add('  String name = "Home";');
     result.add('  String content = "Home has not yet implemented";');
     result.add('');
@@ -183,23 +200,23 @@ class GenerateCommand {
       ['lib', 'routes', 'routes.uloc.g.dart'].join(pathSeparator),
     );
 
-    if (args.length >= 2 && args[1] != '') {
-      declaredFile = File(args[1]);
+    if (_command.length >= 2 && (_command.get(1)?.isNotEmpty ?? false)) {
+      declaredFile = File(_command.get(1) ?? '');
       if (!declaredFile.existsSync()) {
-        throw Exception('${args[1]} is not found');
+        throw Exception('${_command.get(1) ?? ''} is not found');
       }
     }
 
     final content = declaredFile.readAsStringSync();
 
     if (!content.contains(annotation)) {
-      throw Exception('${args[1]} Cannot find ULoCDeclaration');
+      throw Exception('${_command.get(1) ?? ''} Cannot find ULoCDeclaration');
     }
 
     final imports = content.split(annotation).first;
 
-    if (args.length >= 3 && args[2] != '') {
-      routesFile = File(args[2]);
+    if (_command.length >= 3 && (_command.get(2)?.isNotEmpty ?? false)) {
+      routesFile = File(_command.get(2) ?? '');
       if (!routesFile.existsSync()) {
         routesFile.createSync(recursive: true);
       }
@@ -306,5 +323,47 @@ class GenerateCommand {
               : '${word[0].toUpperCase()}${word.substring(1)}',
         )
         .join();
+  }
+}
+
+class _Command {
+  String fullCommand = '';
+  int length = 0;
+  String command = '';
+  Map<String, String> param = {};
+  final List<String> input;
+  _Command(this.input) {
+    if (input.isEmpty) {
+      return;
+    }
+
+    length = input.length;
+
+    command = input.first;
+
+    param = {};
+
+    for (int i = 1; i < input.length; i++) {
+      final part = input[i];
+      if (part.startsWith('--')) {
+        final key = part.substring(2);
+        String? value;
+
+        // Check if next part exists and is not another flag
+        if (i + 1 < input.length && !input[i + 1].startsWith('--')) {
+          value = input[i + 1];
+          i++; // Skip the value
+        }
+        param[key] = value ?? '';
+      }
+    }
+  }
+
+  String? get(int index) {
+    try {
+      return input[index];
+    } catch (e) {
+      return null;
+    }
   }
 }
