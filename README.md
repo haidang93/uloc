@@ -56,13 +56,13 @@ dart run uloc gen <source_file.dart> <destination_file.dart>
 Creates `YourScreen` and `YourScreenController`:
 
 ```bash
-dart run uloc new <WidgetName> <Directory>
+dart run uloc new <WidgetName> --dir --params
 ```
 
 **Example:**
 
 ```bash
-dart run uloc new home_page lib/screens/
+dart run uloc new home_page --dir lib/screens/ --params id,name
 ```
 
 Creates:
@@ -119,10 +119,42 @@ final ULoC uloc = ULoC([
   RouteProperties(
     routeName: Routes.DETAIL(),
     provider: (context, params) =>
-        DetailController(context, params?['id'], params?['name']),
+        DetailController(context, id: params?['id'], name: params?['name']),
     child: Detail(),
   ),
 ]);
+```
+
+--
+
+## 📄 Controller
+
+```dart
+import 'package:uloc/uloc.dart';
+
+class MyController extends ULoCProvider {
+  final String? id;
+  MyController(super.context, {this.id});
+  String name = "Home";
+  String content = "Home has not yet implemented";
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onDispose() {
+    super.onDispose();
+  }
+
+}
+
 ```
 
 --

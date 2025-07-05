@@ -1,13 +1,13 @@
 name: uloc
 description: "A lifecycle-aware routing library for Flutter. Supports named routes, Provider integration, code generation, and page lifecycle hooks like onInit, onReady, and onDispose."
-version: 1.0.3
+version: 1.0.4
 homepage: https://dannynguyen.vn/packages
 repository: https://github.com/haidang93/uloc.git
 
 topics:
   - routing
   - codegen
-  - flutter
+  - lifecycle
   - provider
   - architecture
 
@@ -17,7 +17,6 @@ environment:
 
 dependencies:
   provider: ^6.1.5
-  meta: ^1.16.0
   flutter:
     sdk: flutter
 
