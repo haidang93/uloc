@@ -75,10 +75,21 @@ class GenerateCommand {
     String controllerName = '${pageName.toLowerCase()}_controller';
 
     File viewFile = File(
-      [dir.path, 'views', 'pages', '$viewName.dart'].join(pathSeparator),
+      [
+        dir.path,
+        pageName,
+        'views',
+        'pages',
+        '$viewName.dart',
+      ].join(pathSeparator),
     );
     File controllerFile = File(
-      [dir.path, 'controllers', '$controllerName.dart'].join(pathSeparator),
+      [
+        dir.path,
+        pageName,
+        'controllers',
+        '$controllerName.dart',
+      ].join(pathSeparator),
     );
     if (!viewFile.existsSync()) {
       viewFile.createSync(recursive: true);
