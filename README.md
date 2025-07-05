@@ -1,4 +1,4 @@
-# 🔗 ULoC — UI-Logic-Controller / Router for Flutter
+## **🔗 ULoC — UI-Logic-Controller / Router for Flutter**
 
 **ULoC** is a developer-friendly tool that combines routing, logic injection, and screen scaffolding into one seamless workflow for Flutter.  
 It's designed to work perfectly with **Provider**, and follows scalable patterns like **MVC** or **MVVM**.
