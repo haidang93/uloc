@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta_meta.dart';
 import 'package:provider/provider.dart';
 export 'package:provider/provider.dart';
 
