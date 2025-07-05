@@ -186,7 +186,19 @@ class GenerateCommand {
 
     controllerFile.writeAsStringSync(result.join('\n'));
     print('$green File generated: ${controllerFile.absolute.path} $reset');
-
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
     exit(0);
   }
 
