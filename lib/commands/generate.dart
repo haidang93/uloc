@@ -166,10 +166,10 @@ class GenerateCommand {
     result.add('class $controllerClassName extends ULoCProvider {');
     if (pageParameters.isNotEmpty) {
       for (var paramName in pageParameters) {
-        result.add('  final String $paramName;');
+        result.add('  final String? $paramName;');
       }
       result.add(
-        '  $controllerClassName(super.context, ${pageParameters.map((e) => 'this.$e').join(', ')});',
+        '  $controllerClassName(super.context, {${pageParameters.map((e) => 'this.$e').join(', ')}});',
       );
     } else {
       result.add('  $controllerClassName(super.context);');
