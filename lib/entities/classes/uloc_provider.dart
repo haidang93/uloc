@@ -8,15 +8,15 @@ class ULoCProvider with ChangeNotifier {
   ULoCProvider(this.context);
 
   void onInit() {
-    log('$runtimeType created', name: 'PROV:');
+    _RouteUtilities.log('$runtimeType created');
   }
 
   void onReady() {
-    log('$runtimeType ready', name: 'PROV:');
+    _RouteUtilities.log('$runtimeType ready');
   }
 
   void onDispose() {
-    log('$runtimeType disposed', name: 'PROV:');
+    _RouteUtilities.log('$runtimeType disposed');
   }
 
   void setstate([FutureOr<void> Function()? fn]) async {

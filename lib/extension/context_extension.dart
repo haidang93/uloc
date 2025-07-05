@@ -40,6 +40,8 @@ extension ContextExtension on BuildContext {
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
+    _RouteUtilities.log('pushNamed $routeName');
+
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
     uri = _processTransition(uri, transition, curve);
@@ -55,6 +57,8 @@ extension ContextExtension on BuildContext {
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
+    _RouteUtilities.log('offNamed $routeName');
+
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
     uri = _processTransition(uri, transition, curve);
@@ -71,6 +75,8 @@ extension ContextExtension on BuildContext {
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
+    _RouteUtilities.log('offAllNamed $routeName');
+
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
     uri = _processTransition(uri, transition, curve);

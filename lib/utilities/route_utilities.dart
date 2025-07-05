@@ -25,4 +25,10 @@ class _RouteUtilities {
 
     return result;
   }
+
+  static void log(String? message) {
+    if (message != null) {
+      dev.log(message, name: 'ULoC:', time: DateTime.now());
+    }
+  }
 }
