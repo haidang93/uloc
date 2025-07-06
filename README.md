@@ -37,6 +37,34 @@ dart pub get
 
 ## ⚙️ CLI Commands
 
+```
+///////////////////////////////////////////////////////
+//                                                   //
+//     //     //  //                     ///////     //
+//     //     //  //         //////    ///    ///    //
+//     //     //  //        //    //  ///            //
+//     //     //  //        //    //  ///   ///      //
+//      ///////   ////////   //////    //////        //
+//                                                   //
+//                     ULoC                          //
+///////////////////////////////////////////////////////
+
+Usage: dart run uloc <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+
+gen-route, gr: Generate routing files for the current project from ULoCDeclaration - default path: lib/routes/routes.dart.
+-d, --dir       Custom routes.dart dir. Default: lib/routes/routes.dart
+-t, --target    Custom routes.dart dir. Default: lib/routes/routes.uloc.g.dart
+
+gen-page, gp: Generate new page widget with [name] - default path: lib/app/screens/.
+-d, --dir           Custom dir for new page files. Default: lib/app/screens/
+-p, --parameters    List of page parameters separated by commas. Ex: id,name,email
+```
+
 ### 🔁 Generate Routes
 
 Auto-generates route constants and ULoC map:
@@ -56,13 +84,13 @@ dart run uloc gen <source_file.dart> <destination_file.dart>
 Creates `YourScreen` and `YourScreenController`:
 
 ```bash
-dart run uloc new <WidgetName> --dir --params
+dart run uloc gen-page <widget_name> --dir --parameters
 ```
 
 **Example:**
 
 ```bash
-dart run uloc new home_page --dir lib/screens/ --params id,name
+dart run uloc new home_page --dir lib/screens/ --parameters id,type
 ```
 
 Creates:
@@ -85,13 +113,13 @@ class MyRoutes extends ULoCRouteDeclaration {
     'HOME': ULoCRoute(
       route: '/',
       provider: (context, _) => HomeController(context),
-      child: Home,
+      child: HomePage,
     ),
     'DETAIL': ULoCRoute(
       route: '/detail/:id/:name',
       provider: (context, params) =>
-          DetailController(context, params?['id'], params?['name']),
-      child: Detail,
+          DetailController(context, id: params?['id'], type: params?['type']),
+      child: DetailPage,
     ),
   };
 }
@@ -103,26 +131,26 @@ class MyRoutes extends ULoCRouteDeclaration {
 
 ```dart
 class Routes {
+  Routes._();
+
   static const RouteName HOME = '/';
-  static RouteName DETAIL({String? id, String? name}) =>
-      (id == null || name == null)
-          ? '/detail/:id/:name'
-          : '/detail/$id/$name';
+  static RouteName DETAIL({String? id, String? name}) => id == null && name == null ? '/detail/:id/:name' : '/detail/$id/$name';
 }
 
+/// use this to pass to [MaterialApp] Route setting
 final ULoC uloc = ULoC([
-  RouteProperties(
+  RouteProperties<HomeController>(
     routeName: Routes.HOME,
     provider: (context, _) => HomeController(context),
-    child: Home(),
+    child: HomePage(),
   ),
-  RouteProperties(
+  RouteProperties<DetailController>(
     routeName: Routes.DETAIL(),
-    provider: (context, params) =>
-        DetailController(context, id: params?['id'], name: params?['name']),
-    child: Detail(),
+    provider: (context, params) => DetailController(context, id: params?['id'], type: params?['type']),
+    child: DetailPage(),
   ),
 ]);
+
 ```
 
 --
@@ -134,9 +162,10 @@ import 'package:uloc/uloc.dart';
 
 class MyController extends ULoCProvider {
   final String? id;
-  MyController(super.context, {this.id});
-  String name = "Home";
-  String content = "Home has not yet implemented";
+  final String? type;
+  MyController(super.context, {this.id, this.type});
+  String name = "Detail";
+  String content = "Detail has not yet implemented";
 
   @override
   void onInit() {
