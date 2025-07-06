@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -5,7 +7,7 @@ import 'package:uloc/commands/entities/const.dart';
 import 'package:uloc/commands/entities/enum.dart';
 import 'package:uloc/commands/functions/urtil.dart';
 
-void generatePage(ArgResults cmdArgs) {
+Future generatePage(ArgResults cmdArgs) async {
   Directory dir = Directory(defaultPageDir);
   String pageName = '';
   List<String> pageParameters = [];
@@ -55,11 +57,37 @@ void generatePage(ArgResults cmdArgs) {
       '$controllerName.dart',
     ].join(pathSeparator),
   );
+
+  final stdInputStream = stdin.transform(utf8.decoder).asBroadcastStream();
+
+  Future checkExistAndExit(String path) async {
+    stdout.write(
+      "$green$path$reset is already exist. Do you want to replace it? [y/n] ",
+    );
+    final Completer<String> completer = Completer();
+    final listener = stdInputStream.listen((event) {
+      if (event.isNotEmpty) {
+        completer.complete(event[0]);
+      } else {
+        completer.complete('n');
+      }
+    });
+    final inp = await completer.future;
+    listener.cancel();
+    if (inp.toLowerCase() != 'y') {
+      exit(0);
+    }
+  }
+
   if (!viewFile.existsSync()) {
     viewFile.createSync(recursive: true);
+  } else {
+    await checkExistAndExit(viewFile.path);
   }
   if (!controllerFile.existsSync()) {
     controllerFile.createSync(recursive: true);
+  } else {
+    await checkExistAndExit(controllerFile.path);
   }
 
   List<String> result = [];
