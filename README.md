@@ -184,6 +184,8 @@ class MyApp extends StatelessWidget {
 ## 🔄 Lifecycle Hooks
 
 Each controller can optionally define lifecycle methods:
+You can setstate() in controller
+Each time setstate() is called, Widgets what are watching will be rerendered
 
 ```dart
 @override
