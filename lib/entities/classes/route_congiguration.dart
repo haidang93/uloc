@@ -37,54 +37,6 @@ class _RoutesConfiguration {
         )
         .curve;
 
-    Widget buildTransition(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-    ) {
-      final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
-
-      switch (transition) {
-        case PageTransition.zoom:
-          final tween = Tween(begin: 0.0, end: 1.0);
-          return ScaleTransition(
-            scale: tween.animate(curvedAnimation),
-            child: child,
-          );
-        case PageTransition.fade:
-          final tween = Tween(begin: 0.0, end: 1.0);
-          return FadeTransition(
-            opacity: tween.animate(curvedAnimation),
-            child: child,
-          );
-        case PageTransition.downToUp:
-          final tween = Tween(begin: const Offset(0, 1.0), end: Offset.zero);
-          return SlideTransition(
-            position: tween.animate(curvedAnimation),
-            child: child,
-          );
-        case PageTransition.leftToRight:
-          final tween = Tween(begin: const Offset(-1, 0), end: Offset.zero);
-          return SlideTransition(
-            position: tween.animate(curvedAnimation),
-            child: child,
-          );
-        case PageTransition.rightToLeft:
-          final tween = Tween(begin: const Offset(1, 0), end: Offset.zero);
-          return SlideTransition(
-            position: tween.animate(curvedAnimation),
-            child: child,
-          );
-        default:
-          final tween = Tween(begin: 0.0, end: 1.0);
-          return FadeTransition(
-            opacity: tween.animate(curvedAnimation),
-            child: child,
-          );
-      }
-    }
-
     // Handle routes with parameters
     final param = _RouteUtilities._parseParam(declaredRouteName, route);
 
@@ -104,7 +56,16 @@ class _RoutesConfiguration {
           name: settings.name,
           arguments: settings.arguments,
         ),
-        transitionsBuilder: buildTransition,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return _RouteUtilities.buildTransition(
+            context,
+            animation,
+            secondaryAnimation,
+            child,
+            curve,
+            transition,
+          );
+        },
       );
     }
   }

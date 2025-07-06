@@ -31,4 +31,54 @@ class _RouteUtilities {
       dev.log(message, name: 'ULoC:', time: DateTime.now());
     }
   }
+
+  static Widget buildTransition(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+    Curve curve,
+    PageTransition transition,
+  ) {
+    final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
+
+    switch (transition) {
+      case PageTransition.zoom:
+        final tween = Tween(begin: 0.0, end: 1.0);
+        return ScaleTransition(
+          scale: tween.animate(curvedAnimation),
+          child: child,
+        );
+      case PageTransition.fade:
+        final tween = Tween(begin: 0.0, end: 1.0);
+        return FadeTransition(
+          opacity: tween.animate(curvedAnimation),
+          child: child,
+        );
+      case PageTransition.downToUp:
+        final tween = Tween(begin: const Offset(0, 1.0), end: Offset.zero);
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      case PageTransition.leftToRight:
+        final tween = Tween(begin: const Offset(-1, 0), end: Offset.zero);
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      case PageTransition.rightToLeft:
+        final tween = Tween(begin: const Offset(1, 0), end: Offset.zero);
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      default:
+        final tween = Tween(begin: 0.0, end: 1.0);
+        return FadeTransition(
+          opacity: tween.animate(curvedAnimation),
+          child: child,
+        );
+    }
+  }
 }
