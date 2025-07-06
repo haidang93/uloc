@@ -97,8 +97,20 @@ void generatePage(ArgResults cmdArgs) {
   result.add('  @override');
   result.add('  Widget build(BuildContext context) {');
   result.add('    return Scaffold(');
-  result.add('      appBar: AppBar(title: Text(watch.name)),');
-  result.add('      body: Center(child: Text(watch.content)),');
+  if (pageParameters.contains('name')) {
+    result.add(
+      '      appBar: AppBar(title: Text(watch.name ?? "${snakeToPascal(pageName)}")),',
+    );
+  } else {
+    result.add('      appBar: AppBar(title: Text(watch.name)),');
+  }
+  if (pageParameters.contains('content')) {
+    result.add(
+      '      body: Center(child: Text(watch.content ?? "${snakeToPascal(pageName)} has not yet implemented")),',
+    );
+  } else {
+    result.add('      body: Center(child: Text(watch.content)),');
+  }
   result.add('    );');
   result.add('  }');
   result.add('}');
@@ -135,10 +147,14 @@ void generatePage(ArgResults cmdArgs) {
   } else {
     result.add('  $controllerClassName(super.context);');
   }
-  result.add('  String name = "${snakeToPascal(pageName)}";');
-  result.add(
-    '  String content = "${snakeToPascal(pageName)} has not yet implemented";',
-  );
+  if (!pageParameters.contains('name')) {
+    result.add('  String name = "${snakeToPascal(pageName)}";');
+  }
+  if (!pageParameters.contains('content')) {
+    result.add(
+      '  String content = "${snakeToPascal(pageName)} has not yet implemented";',
+    );
+  }
   result.add('');
   result.add('  @override');
   result.add('  void onInit() {');
