@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uloc/uloc.dart';
 
-import '../../controllers/detail_controller.dart';
+import 'package:uloc_example/app/screens/detail/controllers/detail_controller.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
