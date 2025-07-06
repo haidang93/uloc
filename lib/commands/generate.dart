@@ -16,7 +16,7 @@ class GenerateCommand {
 
       if ([
         CommandFlag.genPage,
-        CommandFlag.genPage.abbr,
+        CommandFlag.genPage.shortHand,
       ].contains(cmdArgs.command?.name)) {
         generatePage(cmdArgs.command!);
         return;
@@ -24,7 +24,7 @@ class GenerateCommand {
 
       if ([
         CommandFlag.genRoute,
-        CommandFlag.genRoute.abbr,
+        CommandFlag.genRoute.shortHand,
       ].contains(cmdArgs.command?.name)) {
         generateRoute(cmdArgs.command!);
         return;
