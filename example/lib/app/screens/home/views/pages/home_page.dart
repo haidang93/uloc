@@ -18,7 +18,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(watch.name)),
-      body: Center(child: Text(watch.content)),
+      body: Center(
+        child: TextButton(
+          onPressed: controller.nextRouteHandle,
+          child: Text(watch.content),
+        ),
+      ),
     );
   }
 }

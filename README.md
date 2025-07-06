@@ -126,14 +126,14 @@ final ULoC uloc = ULoC([
 ## 📄 Controller
 
 ```dart
-import 'package:uloc/uloc.dart';
-
-class MyController extends ULoCProvider {
+class DetailController extends ULoCProvider {
   final String? id;
   final String? type;
-  MyController(super.context, {this.id, this.type});
+  DetailController(super.context, {this.id, this.type});
   String name = "Detail";
   String content = "Detail has not yet implemented";
+
+  int count = 0;
 
   @override
   void onInit() {
@@ -150,7 +150,61 @@ class MyController extends ULoCProvider {
     super.onDispose();
   }
 
+  void increment() {
+    count++;
+    setstate();
+  }
+
+  void decrement() {
+    setstate(() {
+      count--;
+    });
+  }
 }
+
+```
+
+--
+
+## 📄 View
+
+```dart
+class DetailPage extends StatefulWidget {
+  const DetailPage({super.key});
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  DetailController get watch => context.watch<DetailController>();
+  DetailController get controller => context.read<DetailController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(watch.name)),
+      body: Center(
+        child: Text(watch.count.toString(), style: TextStyle(fontSize: 40)),
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8,
+        children: [
+          FloatingActionButton.small(
+            onPressed: controller.increment,
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton.small(
+            onPressed: controller.decrement,
+            child: Icon(Icons.remove),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 ```
 

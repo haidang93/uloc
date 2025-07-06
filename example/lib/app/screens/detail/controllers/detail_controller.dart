@@ -7,6 +7,8 @@ class DetailController extends ULoCProvider {
   String name = "Detail";
   String content = "Detail has not yet implemented";
 
+  int count = 0;
+
   @override
   void onInit() {
     super.onInit();
@@ -22,4 +24,14 @@ class DetailController extends ULoCProvider {
     super.onDispose();
   }
 
+  void increment() {
+    count++;
+    setstate();
+  }
+
+  void decrement() {
+    setstate(() {
+      count--;
+    });
+  }
 }

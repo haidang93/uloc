@@ -18,7 +18,23 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(watch.name)),
-      body: Center(child: Text(watch.content)),
+      body: Center(
+        child: Text(watch.count.toString(), style: TextStyle(fontSize: 40)),
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8,
+        children: [
+          FloatingActionButton.small(
+            onPressed: controller.increment,
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton.small(
+            onPressed: controller.decrement,
+            child: Icon(Icons.remove),
+          ),
+        ],
+      ),
     );
   }
 }

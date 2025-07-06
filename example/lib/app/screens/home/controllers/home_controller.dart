@@ -1,9 +1,10 @@
 import 'package:uloc/uloc.dart';
+import 'package:uloc_example/routes/routes.uloc.g.dart';
 
 class HomeController extends ULoCProvider {
   HomeController(super.context);
   String name = "Home";
-  String content = "Home has not yet implemented";
+  String content = "Click to go to detail page";
 
   @override
   void onInit() {
@@ -18,5 +19,12 @@ class HomeController extends ULoCProvider {
   @override
   void onDispose() {
     super.onDispose();
+  }
+
+  void nextRouteHandle() {
+    context.pushNamed(
+      Routes.DETAIL(name: 'Detail Page'),
+      transition: PageTransition.rightToLeft,
+    );
   }
 }
