@@ -17,6 +17,7 @@ environment:
 
 dependencies:
   provider: ^6.1.5
+  args: ^2.7.0
   flutter:
     sdk: flutter
 
