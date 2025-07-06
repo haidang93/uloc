@@ -192,10 +192,12 @@ class _DetailPageState extends State<DetailPage> {
         spacing: 8,
         children: [
           FloatingActionButton.small(
+            heroTag: 'increment',
             onPressed: controller.increment,
             child: Icon(Icons.add),
           ),
           FloatingActionButton.small(
+            heroTag: 'decrement',
             onPressed: controller.decrement,
             child: Icon(Icons.remove),
           ),
