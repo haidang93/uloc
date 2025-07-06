@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:uloc/commands/entities/const.dart';
 import 'package:uloc/commands/entities/enum.dart';
+import 'package:uloc/commands/entities/route_declaration.dart';
+import 'package:uloc/commands/functions/urtil.dart';
 
 void generateRoute(ArgResults cmdArgs) {
   File declaredFile = File(defaultRouteDeclarationFileDir);
@@ -40,7 +42,7 @@ void generateRoute(ArgResults cmdArgs) {
     routesFile.createSync(recursive: true);
   }
 
-  final routesMap = _parseULoCRoutesToJson(content);
+  final routesMap = parseULoCRoutesToJson(content);
 
   List<String> result = [];
 
@@ -57,20 +59,20 @@ void generateRoute(ArgResults cmdArgs) {
   result.add('class Routes {');
   result.add('  Routes._();');
   result.add('');
-  for (MapEntry<String, Map<String, String>> entry in routesMap.entries) {
-    result.add(_buildRouteName(entry.key, entry.value['route'] ?? ''));
+  for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
+    result.add(_buildRouteName(entry.key, entry.value.route));
   }
   result.add('}');
   result.add('');
   result.add('/// use this to pass to [MaterialApp] Route setting');
   result.add('final ULoC uloc = ULoC([');
-  for (MapEntry<String, Map<String, String>> entry in routesMap.entries) {
-    result.add('  RouteProperties<${entry.value['providerName']}>(');
+  for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
+    result.add('  RouteProperties<${entry.value.providerName}>(');
     result.add(
-      '    routeName: Routes.${entry.key}${(entry.value['route']?.contains(':') ?? false) ? '()' : ''},',
+      '    routeName: Routes.${entry.key}${(entry.value.route.contains(':')) ? '()' : ''},',
     );
-    result.add('    provider: ${entry.value['provider']},');
-    result.add('    child: ${entry.value['child']}(),');
+    result.add('    provider: ${entry.value.provider},');
+    result.add('    child: ${entry.value.child}(),');
     result.add('  ),');
   }
   result.add(']);');
@@ -93,37 +95,4 @@ String _buildRouteName(String name, String value) {
 
     return "  static RouteName $name({${paramList.map((e) => 'String? $e').join(', ')}}) => ${paramList.map((e) => '$e == null').join(' && ')} ? '$value' : '${value.replaceAll(':', '\$')}';";
   }
-}
-
-Map<String, Map<String, String>> _parseULoCRoutesToJson(String source) {
-  final routeMap = <String, Map<String, String>>{};
-
-  final routeRegex = RegExp(
-    r"'(\w+)':\s*ULoCRoute\(\s*"
-    r"route:\s*'([^']+)',\s*"
-    r"provider:\s*\(([^)]+)\)\s*=>\s*([^\n]+?),\s*"
-    r"child:\s*([^\n,]+)",
-    multiLine: true,
-  );
-
-  for (final match in routeRegex.allMatches(source)) {
-    final key = match.group(1)!; // e.g. 'HOME'
-    final route = match.group(2)!; // e.g. '/'
-    final providerArgs = match.group(3)!; // e.g. context, _
-    final providerBody = match.group(4)!.trim(); // e.g. HomeController(context)
-    final child = match.group(5)!.trim().replaceAll(',', ''); // e.g. Home
-
-    // Extract provider name (e.g., HomeController from HomeController(context))
-    final providerNameMatch = RegExp(r'(\w+)\s*\(').firstMatch(providerBody);
-    final providerName = providerNameMatch?.group(1) ?? 'UnknownProvider';
-
-    routeMap[key] = {
-      'route': route,
-      'providerName': providerName,
-      'provider': '($providerArgs) => $providerBody',
-      'child': child,
-    };
-  }
-
-  return routeMap;
 }
