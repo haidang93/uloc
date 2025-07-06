@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:uloc/commands/entities/const.dart';
 import 'package:uloc/commands/entities/enum.dart';
+import 'package:uloc/commands/functions/generate_route_declaration.dart';
 import 'package:uloc/commands/functions/urtil.dart';
 
 Future generatePage(ArgResults cmdArgs) async {
@@ -32,10 +33,7 @@ Future generatePage(ArgResults cmdArgs) async {
     );
   }
 
-  final parameters = cmdArgs.option(CommandFlag.parameters) ?? '';
-  if (parameters.isNotEmpty) {
-    pageParameters = parameters.split(',');
-  }
+  pageParameters = cmdArgs.multiOption(CommandFlag.parameters);
 
   String viewName = '${pageName.toLowerCase()}_page';
   String controllerName = '${pageName.toLowerCase()}_controller';
@@ -60,34 +58,15 @@ Future generatePage(ArgResults cmdArgs) async {
 
   final stdInputStream = stdin.transform(utf8.decoder).asBroadcastStream();
 
-  Future checkExistAndExit(String path) async {
-    stdout.write(
-      "$green$path$reset is already exist. Do you want to replace it? [y/n] ",
-    );
-    final Completer<String> completer = Completer();
-    final listener = stdInputStream.listen((event) {
-      if (event.isNotEmpty) {
-        completer.complete(event[0]);
-      } else {
-        completer.complete('n');
-      }
-    });
-    final inp = await completer.future;
-    listener.cancel();
-    if (inp.toLowerCase() != 'y') {
-      exit(0);
-    }
-  }
-
   if (!viewFile.existsSync()) {
     viewFile.createSync(recursive: true);
   } else {
-    await checkExistAndExit(viewFile.path);
+    await checkExistAndExit(viewFile.path, stdInputStream);
   }
   if (!controllerFile.existsSync()) {
     controllerFile.createSync(recursive: true);
   } else {
-    await checkExistAndExit(controllerFile.path);
+    await checkExistAndExit(controllerFile.path, stdInputStream);
   }
 
   List<String> result = [];
@@ -103,7 +82,7 @@ Future generatePage(ArgResults cmdArgs) async {
   result.add("import 'package:flutter/material.dart';");
   result.add("import 'package:uloc/uloc.dart';");
   result.add('');
-  result.add("import '../../controllers/$controllerName.dart';");
+  result.add(convertPathToImport(controllerFile.path));
   result.add('');
   result.add('class $viewClassName extends StatefulWidget {');
   result.add('  const $viewClassName({super.key});');
@@ -216,6 +195,20 @@ Future generatePage(ArgResults cmdArgs) async {
   //
   //
   //
-  //
+  // Generate declaration
+
+  if (cmdArgs.flag(CommandFlag.genRoute)) {
+    await generateRouteDeclaration(
+      stdInputStream: stdInputStream,
+      cmdArgs: cmdArgs,
+      pageName: pageName,
+      viewClassName: viewClassName,
+      controllerClassName: controllerClassName,
+      viewInport: convertPathToImport(viewFile.path),
+      controllerInport: convertPathToImport(controllerFile.path),
+      pageParameters: pageParameters,
+    );
+  }
+
   exit(0);
 }

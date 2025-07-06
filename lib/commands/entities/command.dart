@@ -23,13 +23,13 @@ class Command {
         ..addOption(
           CommandFlag.dir,
           abbr: CommandFlag.dir.abbr,
-          help: "Custom routes.dart dir. Default: lib/routes/routes.dart",
+          help:
+              "Custom routes declaration dir. Default: lib/routes/routes.dart",
         )
         ..addOption(
           CommandFlag.target,
           abbr: CommandFlag.target.abbr,
-          help:
-              "Custom routes.dart dir. Default: lib/routes/routes.uloc.g.dart",
+          help: "Custom routes dir. Default: lib/routes/routes.uloc.g.dart",
         ),
       help:
           "Generate routing files for the current project from ULoCDeclaration - default path: lib/routes/routes.dart.",
@@ -42,11 +42,28 @@ class Command {
           abbr: CommandFlag.dir.abbr,
           help: "Custom dir for new page files. Default: lib/app/screens/",
         )
-        ..addOption(
+        ..addMultiOption(
           CommandFlag.parameters,
           abbr: CommandFlag.parameters.abbr,
           help:
               "List of page parameters separated by commas. Ex: id,name,email",
+        )
+        ..addFlag(
+          CommandFlag.genRoute,
+          abbr: CommandFlag.genRoute.abbr,
+          help:
+              "enable to generate route declaration after create page. Default: lib/routes/routes.uloc.g.dart",
+        )
+        ..addOption(
+          CommandFlag.routeDeclarationDir,
+          abbr: CommandFlag.routeDeclarationDir.abbr,
+          help:
+              "Custom routes declaration dir. Default: lib/routes/routes.dart",
+        )
+        ..addOption(
+          CommandFlag.routeTargetDir,
+          abbr: CommandFlag.target.abbr,
+          help: "Custom routes dir. Default: lib/routes/routes.uloc.g.dart",
         ),
       help:
           "Generate new page widget with [name] - default path: lib/app/screens/.",

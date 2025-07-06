@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:uloc/commands/entities/const.dart';
 import 'package:uloc/commands/entities/route_declaration.dart';
 
 String snakeToPascal(String input) {
@@ -46,4 +50,43 @@ Map<String, RouteDeclaration> parseULoCRoutesToJson(String source) {
   }
 
   return routeMap;
+}
+
+String convertPathToImport(String path) {
+  if (!path.toLowerCase().startsWith('lib')) {
+    return path;
+  }
+  File yaml = File('pubspec.yaml');
+  final packageName = yaml
+      .readAsLinesSync()
+      .firstWhere(
+        (e) => e.startsWith('name: '),
+        orElse: () => 'name: unknownPackageName',
+      )
+      .split('name: ')
+      .last;
+  final result = path
+      .replaceFirst('lib', 'package:$packageName')
+      .replaceAll('\\', '/');
+
+  return "import '$result';";
+}
+
+Future checkExistAndExit(String name, Stream<String> stdInputStream) async {
+  stdout.write(
+    "$green$name$reset is already exist. Do you want to replace it? [y/n] ",
+  );
+  final Completer<String> completer = Completer();
+  final listener = stdInputStream.listen((event) {
+    if (event.isNotEmpty) {
+      completer.complete(event[0]);
+    } else {
+      completer.complete('n');
+    }
+  });
+  final inp = await completer.future;
+  listener.cancel();
+  if (inp.toLowerCase() != 'y') {
+    exit(0);
+  }
 }

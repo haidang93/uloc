@@ -3,6 +3,8 @@ class CommandFlag {
   static const genPage = 'gen-page';
   static const help = 'help';
   static const dir = 'dir';
+  static const routeDeclarationDir = 'route-declaration-dir';
+  static const routeTargetDir = 'route-target-dir';
   static const parameters = 'parameters';
   static const target = 'target';
   static const name = 'name';
