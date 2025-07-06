@@ -38,70 +38,38 @@ dart pub get
 ## ⚙️ CLI Commands
 
 ```
-///////////////////////////////////////////////////////
-//                                                   //
-//     //     //  //                     ///////     //
-//     //     //  //         //////    ///    ///    //
-//     //     //  //        //    //  ///            //
-//     //     //  //        //    //  ///   ///      //
-//      ///////   ////////   //////    //////        //
-//                                                   //
-//                     ULoC                          //
-///////////////////////////////////////////////////////
+// To install globally:
+dart pub global activate uloc
 
-Usage: dart run uloc <command> [arguments]
+// To install to package:
+dart pub add uloc
 
-Global options:
--h, --help    Print this usage information.
+// Print usage information.
+uloc help
+uloc -h
+uloc --help
 
-Available commands:
+// Generate routing files.
+// Generate routing files for the current project from ULoCDeclaration
+// By default, the route declaration dir is lib/routes/routes.dart.
+// the target file dir is lib/routes/routes.uloc.g.dart
+uloc gen-route
+uloc gr
+uloc gen-route --dir lib/routes/routes.dart --target lib/routes/routes.uloc.g.dart
+uloc gr -d lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 
-gen-route, gr: Generate routing files for the current project from ULoCDeclaration - default path: lib/routes/routes.dart.
--d, --dir       Custom routes.dart dir. Default: lib/routes/routes.dart
--t, --target    Custom routes.dart dir. Default: lib/routes/routes.uloc.g.dart
-
-gen-page, gp: Generate new page widget with [name] - default path: lib/app/screens/.
--d, --dir           Custom dir for new page files. Default: lib/app/screens/
--p, --parameters    List of page parameters separated by commas. Ex: id,name,email
-```
-
-### 🔁 Generate Routes
-
-Auto-generates route constants and ULoC map:
-
-```bash
-dart run uloc gen
-```
-
-### 📁 Generate Routes from → to
-
-```bash
-dart run uloc gen <source_file.dart> <destination_file.dart>
-```
-
-### 🧱 Scaffold a New Screen
-
-Creates `YourScreen` and `YourScreenController`:
-
-```bash
-dart run uloc gen-page <widget_name> --dir --parameters
-```
-
-**Example:**
-
-```bash
-dart run uloc new home_page --dir lib/screens/ --parameters id,type
-```
-
-Creates:
+// Generate new widget page.
+// By default, the route declaration dir is lib/app/screens/.
+// the structure as below:
+// lib/screens/home/
+// ├── views/pages/home_page.dart
+// └── controllers/home_controller.dart
+uloc gen-page home
+uloc gp book_detail --parameters id,title
+uloc gp book_detail --parameters id --parameters title --gen-route --route-declaration-dir lib/routes/routes.dart --route-target-dir lib/routes/routes.uloc.g.dart
+uloc gp home -g -r lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 
 ```
-lib/screens/home/
-├── views/pages/home_page.dart
-└── controllers/home_controller.dart
-```
-
----
 
 ## ✨ Route Declaration Example
 
