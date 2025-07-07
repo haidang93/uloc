@@ -278,7 +278,7 @@ ULoC fits into modern app structure:
 Named routes support `:params` like `/user/:id`. Navigate with:
 
 ```dart
-context.pushNamed(Routes.Detail(id: '42'))
+context.getTo(Routes.Detail(id: '42'))
 ```
 
 Works with Firebase Dynamic Links, URI parsers, etc.

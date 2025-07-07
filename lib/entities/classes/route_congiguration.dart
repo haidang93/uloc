@@ -70,7 +70,7 @@ class _RoutesConfiguration {
     }
   }
 
-  /// get the route definition from declared routes
+  /// get the route definition from declared [routes]
   Uri? _getRoute(Uri? routeName) {
     try {
       if (routeName == null || routeName.path.isEmpty) {

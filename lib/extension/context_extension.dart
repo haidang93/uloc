@@ -17,7 +17,7 @@ extension ContextExtension on BuildContext {
   ///
   ///
   ///
-  // navigational methods
+  /// navigational methods
   void pop<T extends Object?>([T? result]) {
     if (hasParentRoute) {
       Navigator.of(this).pop<T>(result);
@@ -34,13 +34,13 @@ extension ContextExtension on BuildContext {
     }
   }
 
-  Future<T?> pushNamed<T>(
+  Future<T?> getTo<T>(
     RouteName routeName, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('pushNamed $routeName');
+    _RouteUtilities.log('getTo $routeName');
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
@@ -50,14 +50,14 @@ extension ContextExtension on BuildContext {
     ).pushNamed<T>(uri.toString(), arguments: arguments);
   }
 
-  Future<T?> pushReplacementNamed<T, J>(
+  Future<T?> off<T, J>(
     RouteName routeName, {
     Object? arguments,
     J? result,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('offNamed $routeName');
+    _RouteUtilities.log('off $routeName');
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
@@ -69,13 +69,13 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  Future<T?> pushNamedAndRemoveUntil<T>(
+  Future<T?> offAll<T>(
     RouteName routeName, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('offAllNamed $routeName');
+    _RouteUtilities.log('offAll $routeName');
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
@@ -87,18 +87,26 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  Future<T?> push<T>(
-    Widget widget, {
+  Future<T?> addRoute<T, P extends ULoCProvider>(
+    Widget screen, {
+    P Function(BuildContext context)? provider,
     Object? arguments,
     String? name,
     PageTransition? transition,
     Curve curve = Curves.ease,
   }) async {
-    _RouteUtilities.log('pushNamed ${name ?? widget.runtimeType}');
+    _RouteUtilities.log('addRoute ${name ?? screen.runtimeType}');
     closeKeyboard();
+
+    Widget screenWidget = screen;
+
+    if (provider != null) {
+      screenWidget = _buildCustomWidgetPage<P>(screen, provider);
+    }
+
     return await Navigator.of(this).push<T>(
       _buildRoute(
-        page: widget,
+        page: screenWidget,
         arguments: arguments,
         name: name,
         transition: transition,
@@ -107,18 +115,26 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  Future<T?> pushReplacement<T, J>(
-    Widget widget, {
+  Future<T?> replaceRoute<T, J, P extends ULoCProvider>(
+    Widget screen, {
+    P Function(BuildContext context)? provider,
     Object? arguments,
     String? name,
     PageTransition? transition,
     Curve curve = Curves.ease,
   }) async {
-    _RouteUtilities.log('pushNamed ${name ?? widget.runtimeType}');
+    _RouteUtilities.log('offRoute ${name ?? screen.runtimeType}');
     closeKeyboard();
+
+    Widget screenWidget = screen;
+
+    if (provider != null) {
+      screenWidget = _buildCustomWidgetPage<P>(screen, provider);
+    }
+
     return await Navigator.of(this).pushReplacement<T, J>(
       _buildRoute(
-        page: widget,
+        page: screenWidget,
         arguments: arguments,
         name: name,
         transition: transition,
@@ -127,19 +143,27 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  Future<T?> pushAndRemoveUntil<T>(
-    Widget widget, {
+  Future<T?> replaceAllRoute<T, P extends ULoCProvider>(
+    Widget screen, {
+    P Function(BuildContext context)? provider,
     Object? arguments,
     String? name,
     PageTransition? transition,
     Curve curve = Curves.ease,
     bool Function(Route<dynamic>)? predicate,
   }) async {
-    _RouteUtilities.log('pushNamed ${name ?? widget.runtimeType}');
+    _RouteUtilities.log('offAllRoute ${name ?? screen.runtimeType}');
     closeKeyboard();
+
+    Widget screenWidget = screen;
+
+    if (provider != null) {
+      screenWidget = _buildCustomWidgetPage<P>(screen, provider);
+    }
+
     return await Navigator.of(this).pushAndRemoveUntil<T>(
       _buildRoute(
-        page: widget,
+        page: screenWidget,
         arguments: arguments,
         name: name,
         transition: transition,
@@ -201,5 +225,15 @@ extension ContextExtension on BuildContext {
       );
     }
     return route;
+  }
+
+  Widget _buildCustomWidgetPage<P extends ULoCProvider>(
+    Widget screen,
+    P Function(BuildContext context) provider,
+  ) {
+    return ChangeNotifierProvider<P>(
+      create: (context) => provider(context),
+      child: _RouteWithProvider<P>(child: screen),
+    );
   }
 }
