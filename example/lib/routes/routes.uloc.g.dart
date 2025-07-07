@@ -17,18 +17,18 @@ class Routes {
 
   static const RouteName HOME = '/';
   static RouteName DETAIL({String? id, String? name}) => id == null && name == null ? '/detail/:id/:name' : '/detail/$id/$name';
-}
 
-/// use this to pass to [MaterialApp] Route setting
-final ULoC uloc = ULoC([
-  RouteProperties<HomeController>(
-    routeName: Routes.HOME,
-    provider: (context, _) => HomeController(context),
-    child: HomePage(),
-  ),
-  RouteProperties<DetailController>(
-    routeName: Routes.DETAIL(),
-    provider: (context, params) => DetailController(context, id: params?['id'], type: params?['type']),
-    child: DetailPage(),
-  ),
-]);
+   /// use this to pass to [MaterialApp] Route setting
+  static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([
+    RouteProperties<HomeController>(
+      routeName: Routes.HOME,
+      provider: (context, _) => HomeController(context),
+      child: HomePage(),
+    ),
+    RouteProperties<DetailController>(
+      routeName: Routes.DETAIL(),
+      provider: (context, params) => DetailController(context, id: params?['id'], type: params?['type']),
+      child: DetailPage(),
+    ),
+  ]);
+}

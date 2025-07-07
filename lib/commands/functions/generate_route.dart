@@ -62,20 +62,22 @@ void generateRoute(ArgResults cmdArgs) {
   for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
     result.add(_buildRouteName(entry.key, entry.value.route));
   }
-  result.add('}');
   result.add('');
-  result.add('/// use this to pass to [MaterialApp] Route setting');
-  result.add('final ULoC uloc = ULoC([');
+  result.add('   /// use this to pass to [MaterialApp] Route setting');
+  result.add(
+    '  static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([',
+  );
   for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
-    result.add('  RouteProperties<${entry.value.providerName}>(');
+    result.add('    RouteProperties<${entry.value.providerName}>(');
     result.add(
-      '    routeName: Routes.${entry.key}${(entry.value.route.contains(':')) ? '()' : ''},',
+      '      routeName: Routes.${entry.key}${(entry.value.route.contains(':')) ? '()' : ''},',
     );
-    result.add('    provider: ${entry.value.provider},');
-    result.add('    child: ${entry.value.child}(),');
-    result.add('  ),');
+    result.add('      provider: ${entry.value.provider},');
+    result.add('      child: ${entry.value.child}(),');
+    result.add('    ),');
   }
-  result.add(']);');
+  result.add('  ]);');
+  result.add('}');
   result.add('');
   routesFile.writeAsStringSync(result.join('\n'));
 

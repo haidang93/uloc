@@ -19,8 +19,8 @@ part 'entities/enums/curves_enum.dart';
 part 'utilities/route_utilities.dart';
 part 'extension/context_extension.dart';
 
-class ULoC {
-  ULoC(List<RouteProperties> routes)
+class ULoCRouteConfiguration {
+  ULoCRouteConfiguration(List<RouteProperties> routes)
     : _configuration = _RoutesConfiguration(routes);
   final _RoutesConfiguration _configuration;
 
