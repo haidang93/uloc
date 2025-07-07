@@ -177,7 +177,10 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  // watch will trigger rebuild widget on watch value changed
   DetailController get watch => context.watch<DetailController>();
+
+  // controller gives access to controller properties but won't trigger rebuild on properties' value change
   DetailController get controller => context.read<DetailController>();
 
   @override
