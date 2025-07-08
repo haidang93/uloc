@@ -97,6 +97,11 @@ uloc gp home -g -r lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 class MyRoutes extends ULoCRouteDeclaration {
   @override
   Map<String, ULoCRoute<ULoCProvider>> get route => {
+    'WILDCARD': ULoCRoute(
+      route: '*',
+      provider: (context, _) => NotFoundController(context),
+      child: NotFoundPage,
+    ),
     'HOME': ULoCRoute(
       route: '/',
       provider: (context, _) => HomeController(context),
@@ -120,11 +125,17 @@ class MyRoutes extends ULoCRouteDeclaration {
 class Routes {
   Routes._();
 
+  static const RouteName WILDCARD = '*';
   static const RouteName HOME = '/';
   static RouteName DETAIL({String? id, String? type}) => id == null && type == null ? '/detail/:id/:type' : '/detail/$id/$type';
 
   /// use this to pass to [MaterialApp] Route setting
   static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([
+    RouteProperties<NotFoundController>(
+      routeName: Routes.WILDCARD,
+      provider: (context, _) => NotFoundController(context),
+      child: NotFoundPage(),
+    ),
     RouteProperties<HomeController>(
       routeName: Routes.HOME,
       provider: (context, _) => HomeController(context),
@@ -157,6 +168,10 @@ class DetailController extends ULoCProvider {
   @override
   void onInit() {
     super.onInit();
+
+    // get query from route
+    String utmSource = query('utm_source');
+    Map<String, dynamic> allQuery = queryParametersAll;
   }
 
   @override
@@ -269,10 +284,6 @@ Each time setstate() is called, Widgets what are watching will be rerendered
 @override
 void onInit() {
   fetchData();
-
-  // get query from route
-  String utmSource = query('utm_source');
-  Map<String, dynamic> allQuery = queryParametersAll;
 }
 
 @override
