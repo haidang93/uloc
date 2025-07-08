@@ -103,7 +103,7 @@ class MyRoutes extends ULoCRouteDeclaration {
       child: HomePage,
     ),
     'DETAIL': ULoCRoute(
-      route: '/detail/:id/:name',
+      route: '/detail/:id/:type',
       provider: (context, params) =>
           DetailController(context, id: params?['id'], type: params?['type']),
       child: DetailPage,
@@ -312,8 +312,8 @@ context.getTo(Routes.Home.withQuery({ 'utm_source': 'facebook'}))
 
 // widget navigation with query
 context.addRoute(
-      HomePage(),
-      provider: (context) => HomeController(context),
+      WidgetPage(),
+      provider: (context) => WidgetController(context),
       name: 'custom_route'.withQuery({ 'utm_source': 'facebook'}),
     );
 ```
