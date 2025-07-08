@@ -18,13 +18,26 @@ It's designed to work perfectly with **Provider**, and follows scalable patterns
 
 ---
 
+## ✨ Functionalities
+
+- Route generate
+- Widget generate
+- Separate view and controller
+- Convenient lifecycle hook
+- Access to context and setstate from any where
+- Support paramaters and URL query - Great for deeplink
+- Easy navigation with context extension
+- Named and Widget navigation
+
+---
+
 ## 📦 Installation
 
 In your Flutter project:
 
 ```yaml
 dependencies:
-  uloc: ^1.0.0
+  uloc: ^latest
 ```
 
 Then:
@@ -37,33 +50,39 @@ dart pub get
 
 ## ⚙️ CLI Commands
 
-```
-// To install globally:
+```sh
+# To install globally:
 dart pub global activate uloc
 
-// To install to package:
+# To install to package:
 dart pub add uloc
 
-// Print usage information.
+# Usage globally:
+uloc <command> [arguments]
+
+# Usage package:
+dart run uloc <command> [arguments]
+
+# Print usage information.
 uloc help
 uloc -h
 uloc --help
 
-// Generate routing files.
-// Generate routing files for the current project from ULoCDeclaration
-// By default, the route declaration dir is lib/routes/routes.dart.
-// the target file dir is lib/routes/routes.uloc.g.dart
+# Generate routing files.
+# Generate routing files for the current project from ULoCDeclaration
+# By default, the route declaration dir is lib/routes/routes.dart.
+# the target file dir is lib/routes/routes.uloc.g.dart
 uloc gen-route
 uloc gr
 uloc gen-route --dir lib/routes/routes.dart --target lib/routes/routes.uloc.g.dart
 uloc gr -d lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 
-// Generate new widget page.
-// By default, the route declaration dir is lib/app/screens/.
-// the structure as below:
-// lib/screens/home/
-// ├── views/pages/home_page.dart
-// └── controllers/home_controller.dart
+# Generate new widget page.
+# By default, the route declaration dir is lib/app/screens/.
+# the structure as below:
+# lib/screens/home/
+# ├── views/pages/home_page.dart
+# └── controllers/home_controller.dart
 uloc gen-page home
 uloc gp book_detail --parameters id,title
 uloc gp book_detail --parameters id --parameters title --gen-route --route-declaration-dir lib/routes/routes.dart --route-target-dir lib/routes/routes.uloc.g.dart
@@ -102,7 +121,7 @@ class Routes {
   Routes._();
 
   static const RouteName HOME = '/';
-  static RouteName DETAIL({String? id, String? name}) => id == null && name == null ? '/detail/:id/:name' : '/detail/$id/$name';
+  static RouteName DETAIL({String? id, String? type}) => id == null && type == null ? '/detail/:id/:type' : '/detail/$id/$type';
 
   /// use this to pass to [MaterialApp] Route setting
   static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([
@@ -250,6 +269,10 @@ Each time setstate() is called, Widgets what are watching will be rerendered
 @override
 void onInit() {
   fetchData();
+
+  // get query from route
+  String utmSource = query('utm_source');
+  Map<String, dynamic> allQuery = queryParametersAll;
 }
 
 @override
@@ -266,7 +289,7 @@ void onDispose() {
 
 ---
 
-## 🧠 Architecture Friendly
+## Architecture Friendly
 
 ULoC fits into modern app structure:
 
@@ -276,12 +299,23 @@ ULoC fits into modern app structure:
 
 ---
 
-## 🔗 Deep Linking
+## 🔗 Navigation, Deep Linking
 
 Named routes support `:params` like `/user/:id`. Navigate with:
 
 ```dart
+// named navigation
 context.getTo(Routes.Detail(id: '42'))
+
+// named navigation with query
+context.getTo(Routes.Home.withQuery({ 'utm_source': 'facebook'}))
+
+// widget navigation with query
+context.addRoute(
+      HomePage(),
+      provider: (context) => HomeController(context),
+      name: 'custom_route'.withQuery({ 'utm_source': 'facebook'}),
+    );
 ```
 
 Works with Firebase Dynamic Links, URI parsers, etc.
