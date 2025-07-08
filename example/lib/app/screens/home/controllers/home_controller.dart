@@ -23,7 +23,7 @@ class HomeController extends ULoCProvider {
 
   void nextRouteHandle() {
     context.getTo(
-      Routes.DETAIL(name: 'Detail Page'),
+      Routes.DETAIL(type: 'Detail Page'),
       transition: PageTransition.rightToLeft,
     );
   }

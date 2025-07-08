@@ -14,7 +14,7 @@ class MyRoutes extends ULoCRouteDeclaration {
       child: HomePage,
     ),
     'DETAIL': ULoCRoute(
-      route: '/detail/:id/:name',
+      route: '/detail/:id/:type',
       provider: (context, params) =>
           DetailController(context, id: params?['id'], type: params?['type']),
       child: DetailPage,

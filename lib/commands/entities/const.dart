@@ -7,6 +7,9 @@ const reset = '\x1B[0m';
 
 const annotation = '@ULoCDeclaration()';
 
+const transitionParamKey = '@transition';
+const curveParamKey = '@curve';
+
 final pathSeparator = Platform.pathSeparator;
 
 final defaultPageDir = ['lib', 'app', 'screens'].join(pathSeparator);

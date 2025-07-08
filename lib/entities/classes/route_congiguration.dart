@@ -15,27 +15,36 @@ class _RoutesConfiguration {
 
   Route<dynamic>? routeBuilder(RouteSettings settings) {
     final route = Uri.parse(settings.name ?? '');
-    final declaredRouteName = _getRoute(route);
+    final declaredRouteName = _getDeclaredRoute(route);
 
     // Handle unknown routes
     if (declaredRouteName == null) {
       throw Exception(
-        'Route "${settings.name}" is not declared in routes.dart.\n'
+        'Route "${route.path}" is not declared in routes.dart.\n'
         'Make sure you have registered this route using the correct name.\n'
         'Hint: Check for typos or missing route declarations in your routes.dart.',
       );
     }
 
     PageTransition? transition = PageTransition.values.firstWhere(
-      (e) => e.name == route.queryParameters['transition'],
+      (e) => e.name == route.queryParameters[transitionParamKey],
       orElse: () => PageTransition.none,
     );
     Curve curve = CurveEnum.values
         .firstWhere(
-          (e) => e.name == route.queryParameters['curve'],
+          (e) => e.name == route.queryParameters[curveParamKey],
           orElse: () => CurveEnum.ease,
         )
         .curve;
+
+    Object? arguments = settings.arguments;
+    if (arguments == null || arguments is Map<String, dynamic>) {
+      arguments ??= <String, dynamic>{};
+      arguments = {
+        ...(arguments as Map<String, dynamic>),
+        ...route.queryParametersAll,
+      };
+    }
 
     // Handle routes with parameters
     final param = _RouteUtilities._parseParam(declaredRouteName, route);
@@ -43,19 +52,13 @@ class _RoutesConfiguration {
     if (transition == PageTransition.none) {
       return MaterialPageRoute(
         builder: (context) => routes[declaredRouteName.path]!(context, param),
-        settings: RouteSettings(
-          name: settings.name,
-          arguments: settings.arguments,
-        ),
+        settings: RouteSettings(name: route.toString(), arguments: arguments),
       );
     } else {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             routes[declaredRouteName.path]!(context, param),
-        settings: RouteSettings(
-          name: settings.name,
-          arguments: settings.arguments,
-        ),
+        settings: RouteSettings(name: route.toString(), arguments: arguments),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return _RouteUtilities.buildTransition(
             context,
@@ -71,7 +74,7 @@ class _RoutesConfiguration {
   }
 
   /// get the route definition from declared [routes]
-  Uri? _getRoute(Uri? routeName) {
+  Uri? _getDeclaredRoute(Uri? routeName) {
     try {
       if (routeName == null || routeName.path.isEmpty) {
         return null;

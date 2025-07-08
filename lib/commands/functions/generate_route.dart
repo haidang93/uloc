@@ -95,6 +95,6 @@ String _buildRouteName(String name, String value) {
         .map((e) => e.replaceAll(':', ''))
         .toList();
 
-    return "  static RouteName $name({${paramList.map((e) => 'String? $e').join(', ')}}) => ${paramList.map((e) => '$e == null').join(' && ')} ? '$value' : '${value.replaceAll(':', '\$')}';";
+    return "  static RouteName $name({${paramList.map((e) => 'String? $e').join(', ')}}) => ${paramList.map((e) => '$e == null').join(' && ')} ? '$value' : '${value.replaceAllMapped(RegExp(r':(\w+)'), (match) => '\${${match[1]} ?? \'\' }')}';";
   }
 }

@@ -18,7 +18,7 @@ class _RouteUtilities {
       final patternSegment = patternSegments[i];
       final pathSegment = pathSegments[i];
 
-      if (patternSegment.startsWith(':')) {
+      if (patternSegment.startsWith(':') && pathSegment.isNotEmpty) {
         result[patternSegment.substring(1)] = pathSegment;
       }
     }
@@ -28,7 +28,7 @@ class _RouteUtilities {
 
   static void log(String? message) {
     if (message != null) {
-      dev.log(message, name: 'ULoC:', time: DateTime.now());
+      dev.log(message, name: 'ULoC', time: DateTime.now());
     }
   }
 

@@ -5,6 +5,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uloc/commands/entities/const.dart';
 export 'package:provider/provider.dart';
 
 part 'widgets/lifecycle_widget.dart';
@@ -18,6 +19,7 @@ part 'entities/enums/transition_enum.dart';
 part 'entities/enums/curves_enum.dart';
 part 'utilities/route_utilities.dart';
 part 'extension/context_extension.dart';
+part 'extension/string_extension.dart';
 
 class ULoCRouteConfiguration {
   ULoCRouteConfiguration(List<RouteProperties> routes)

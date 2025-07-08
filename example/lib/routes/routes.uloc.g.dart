@@ -16,7 +16,7 @@ class Routes {
   Routes._();
 
   static const RouteName HOME = '/';
-  static RouteName DETAIL({String? id, String? name}) => id == null && name == null ? '/detail/:id/:name' : '/detail/$id/$name';
+  static RouteName DETAIL({String? id, String? type}) => id == null && type == null ? '/detail/:id/:type' : '/detail/${id ?? '' }/${type ?? '' }';
 
    /// use this to pass to [MaterialApp] Route setting
   static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([

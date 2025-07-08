@@ -10,6 +10,11 @@ extension ContextExtension on BuildContext {
 
   bool get hasParentRoute => ModalRoute.of(this)?.canPop ?? false;
 
+  Object? get routeArguments => ModalRoute.of(this)?.settings.arguments;
+
+  /// Route Name of this page
+  String? get location => ModalRoute.of(this)?.settings.name;
+
   ///
   ///
   ///
@@ -44,7 +49,7 @@ extension ContextExtension on BuildContext {
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
-    uri = _processTransition(uri, transition, curve);
+    uri = _processRouteQuery(uri, transition, curve);
     return await Navigator.of(
       this,
     ).pushNamed<T>(uri.toString(), arguments: arguments);
@@ -61,7 +66,7 @@ extension ContextExtension on BuildContext {
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
-    uri = _processTransition(uri, transition, curve);
+    uri = _processRouteQuery(uri, transition, curve);
     return await Navigator.of(this).pushReplacementNamed<T, J>(
       uri.toString(),
       result: result,
@@ -79,7 +84,7 @@ extension ContextExtension on BuildContext {
 
     closeKeyboard();
     Uri uri = Uri.parse(routeName);
-    uri = _processTransition(uri, transition, curve);
+    uri = _processRouteQuery(uri, transition, curve);
     return await Navigator.of(this).pushNamedAndRemoveUntil<T>(
       uri.toString(),
       (route) => false,
@@ -179,16 +184,16 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  Uri _processTransition(
+  Uri _processRouteQuery(
     Uri uri,
     PageTransition? transition,
     CurveEnum? curve,
   ) {
     return uri.replace(
       queryParameters: {
-        ...uri.queryParameters,
-        'transition': transition?.name,
-        if (curve != null) 'curve': curve.name,
+        ...uri.queryParametersAll,
+        transitionParamKey: transition?.name,
+        if (curve != null) curveParamKey: curve.name,
       },
     );
   }
