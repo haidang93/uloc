@@ -8,6 +8,11 @@ import 'package:uloc_example/app/screens/home/views/pages/home_page.dart';
 class MyRoutes extends ULoCRouteDeclaration {
   @override
   Map<String, ULoCRoute<ULoCProvider>> get route => {
+    'WILDCARD': ULoCRoute(
+      route: '*',
+      provider: (context, _) => HomeController(context),
+      child: HomePage,
+    ),
     'HOME': ULoCRoute(
       route: '/',
       provider: (context, _) => HomeController(context),

@@ -77,7 +77,7 @@ class _RoutesConfiguration {
   Uri? _getDeclaredRoute(Uri? routeName) {
     try {
       if (routeName == null || routeName.path.isEmpty) {
-        return null;
+        throw Exception();
       } else if (routes.containsKey(routeName.path)) {
         return Uri.parse(
           routes.keys.firstWhere((key) => key == routeName.path),
@@ -106,8 +106,13 @@ class _RoutesConfiguration {
         }
         if (matched) return Uri.parse(route);
       }
-      return null;
+      throw Exception();
     } catch (e) {
+      if (routes['*'] != null) {
+        _RouteUtilities.log("User WILDCARD route}");
+        return Uri.parse('*');
+      }
+
       return null;
     }
   }

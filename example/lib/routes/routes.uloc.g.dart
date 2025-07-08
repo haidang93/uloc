@@ -15,11 +15,17 @@ import 'package:uloc_example/app/screens/home/views/pages/home_page.dart';
 class Routes {
   Routes._();
 
+  static const RouteName WILDCARD = '*';
   static const RouteName HOME = '/';
   static RouteName DETAIL({String? id, String? type}) => id == null && type == null ? '/detail/:id/:type' : '/detail/${id ?? '' }/${type ?? '' }';
 
    /// use this to pass to [MaterialApp] Route setting
   static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([
+    RouteProperties<HomeController>(
+      routeName: Routes.WILDCARD,
+      provider: (context, _) => HomeController(context),
+      child: HomePage(),
+    ),
     RouteProperties<HomeController>(
       routeName: Routes.HOME,
       provider: (context, _) => HomeController(context),
