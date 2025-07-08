@@ -9,6 +9,7 @@
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
   errors:
+    # Don't add this in actual project
     unnecessary_overrides: ignore
 include: package:flutter_lints/flutter.yaml
 
