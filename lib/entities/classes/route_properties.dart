@@ -13,10 +13,14 @@ class RouteProperties<P extends ULoCProvider> {
   Widget buildRouteMapElement(
     BuildContext context, [
     Map<String, dynamic>? params = const {},
+    List<BuildContext>? ancestorContext,
   ]) {
     return ChangeNotifierProvider<P>(
       create: (context) => provider(context, params),
-      child: _RouteWithProvider<P>(child: child),
+      child: _RouteWithProvider<P>(
+        ancestorContext: ancestorContext,
+        child: child,
+      ),
     );
   }
 }

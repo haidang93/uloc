@@ -48,16 +48,27 @@ class _RoutesConfiguration {
 
     // Handle routes with parameters
     final param = _RouteUtilities._parseParam(declaredRouteName, route);
+    final previousProviderCache = ULoCProvider._takePreviousProviderCache();
 
     if (transition == PageTransition.none) {
       return MaterialPageRoute(
-        builder: (context) => routes[declaredRouteName.path]!(context, param),
+        builder: (context) {
+          return routes[declaredRouteName.path]!(
+            context,
+            param,
+            previousProviderCache?._ancestorContexts,
+          );
+        },
         settings: RouteSettings(name: route.toString(), arguments: arguments),
       );
     } else {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            routes[declaredRouteName.path]!(context, param),
+            routes[declaredRouteName.path]!(
+              context,
+              param,
+              previousProviderCache?._ancestorContexts,
+            ),
         settings: RouteSettings(name: route.toString(), arguments: arguments),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return _RouteUtilities.buildTransition(
