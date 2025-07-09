@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.14] - 2025-07-09
+
+### ✨ Update
+
+- Can access to controllers from previous route
+- Support type safe parameter
+
 ## [1.0.13] - 2025-07-08
 
 🎉 Initial release!
