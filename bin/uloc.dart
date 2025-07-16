@@ -1,5 +1,5 @@
-import 'package:uloc/commands/generate.dart';
+import 'package:uloc/uloc.dart';
 
 void main(List<String> arguments) {
-  GenerateCommand(arguments).run();
+  ExecuteCommand(arguments).run();
 }

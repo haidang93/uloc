@@ -1,11 +1,13 @@
 // ignore_for_file: depend_on_referenced_packages, implementation_imports
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer' as dev;
+import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uloc/commands/entities/const.dart';
 export 'package:provider/provider.dart';
 
 part 'widgets/lifecycle_widget.dart';
@@ -22,6 +24,15 @@ part 'entities/enums/curves_enum.dart';
 part 'utilities/route_utilities.dart';
 part 'extension/context_extension.dart';
 part 'extension/string_extension.dart';
+part 'commands/entities/cmd_enum.dart';
+part 'commands/entities/const.dart';
+part 'commands/entities/route_declaration.dart';
+part 'commands/functions/generate_page.dart';
+part 'commands/functions/generate_route_declaration.dart';
+part 'commands/functions/generate_route.dart';
+part 'commands/functions/urtil.dart';
+part 'commands/command.dart';
+part 'commands/execute.dart';
 
 /// A wrapper class that holds the ULoC route configuration for the app.
 ///

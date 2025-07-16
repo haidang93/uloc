@@ -1,3 +1,5 @@
+part of '../../../uloc.dart';
+
 class CommandFlag {
   static const genRoute = 'gen-route';
   static const genPage = 'gen-page';

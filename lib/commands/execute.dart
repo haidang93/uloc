@@ -1,14 +1,8 @@
-import 'dart:io';
+part of '../../uloc.dart';
 
-import 'package:uloc/commands/entities/command.dart';
-import 'package:uloc/commands/entities/const.dart';
-import 'package:uloc/commands/entities/enum.dart';
-import 'package:uloc/commands/functions/generate_page.dart';
-import 'package:uloc/commands/functions/generate_route.dart';
-
-class GenerateCommand {
+class ExecuteCommand {
   final Command _command;
-  GenerateCommand(List<String> args) : _command = Command(args);
+  ExecuteCommand(List<String> args) : _command = Command(args);
 
   void run() async {
     try {

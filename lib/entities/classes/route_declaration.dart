@@ -1,3 +1,5 @@
+part of '../../../uloc.dart';
+
 class RouteDeclaration {
   final String routeName;
   final String route;

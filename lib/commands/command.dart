@@ -1,10 +1,5 @@
 // ignore_for_file: avoid_print
-
-import 'dart:io';
-
-import 'package:args/args.dart';
-import 'package:uloc/commands/entities/const.dart';
-import 'package:uloc/commands/entities/enum.dart';
+part of '../../uloc.dart';
 
 class Command {
   final List<String> input;

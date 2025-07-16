@@ -1,12 +1,4 @@
-import 'dart:io';
-
-import 'package:args/args.dart';
-import 'package:uloc/commands/entities/command.dart';
-import 'package:uloc/commands/entities/const.dart';
-import 'package:uloc/commands/entities/enum.dart';
-import 'package:uloc/commands/entities/route_declaration.dart';
-import 'package:uloc/commands/functions/generate_route.dart';
-import 'package:uloc/commands/functions/urtil.dart';
+part of '../../../uloc.dart';
 
 Future generateRouteDeclaration({
   required String viewClassName,
