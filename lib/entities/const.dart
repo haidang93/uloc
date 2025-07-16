@@ -1,4 +1,4 @@
-part of '../../../uloc.dart';
+part of '../../uloc.dart';
 
 const green = '\x1B[32m';
 const red = '\x1B[31m';
