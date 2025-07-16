@@ -1,17 +1,15 @@
 part of '../../uloc.dart';
 
 class _RoutesConfiguration {
-  _RoutesConfiguration(this._routes);
-
-  final List<RouteProperties> _routes;
-
-  RouteMap get routes {
+  _RoutesConfiguration(List<RouteProperties> routes) {
     final RouteMap result = {};
-    for (var route in _routes) {
+    for (var route in routes) {
       result[route.routeName.name] = route.buildRouteMapElement;
     }
-    return result;
+    _routes = result;
   }
+
+  RouteMap _routes = {};
 
   Route<dynamic>? routeBuilder(RouteSettings settings) {
     // reconstruct ULoCRoute from string
@@ -47,7 +45,7 @@ class _RoutesConfiguration {
     if (transition == PageTransition.none) {
       return MaterialPageRoute(
         builder: (context) {
-          return routes[declaredRouteName.path]!(
+          return _routes[declaredRouteName.path]!(
             context,
             ulocRoute,
             ancestorContexts,
@@ -61,7 +59,7 @@ class _RoutesConfiguration {
     } else {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            routes[declaredRouteName.path]!(
+            _routes[declaredRouteName.path]!(
               context,
               ulocRoute,
               ancestorContexts,
@@ -89,13 +87,13 @@ class _RoutesConfiguration {
     try {
       if (routeName == null || routeName.path.isEmpty) {
         throw Exception();
-      } else if (routes.containsKey(routeName.path)) {
+      } else if (_routes.containsKey(routeName.path)) {
         return Uri.parse(
-          routes.keys.firstWhere((key) => key == routeName.path),
+          _routes.keys.firstWhere((key) => key == routeName.path),
         );
       }
 
-      for (var route in routes.keys) {
+      for (var route in _routes.keys) {
         final patternSegments = Uri.parse(route).pathSegments;
         final pathSegments = routeName.pathSegments;
 
@@ -119,8 +117,8 @@ class _RoutesConfiguration {
       }
       throw Exception();
     } catch (e) {
-      if (routes['*'] != null) {
-        _RouteUtilities.log("User WILDCARD route}");
+      if (_routes['*'] != null) {
+        _RouteUtilities.log("User WILDCARD route");
         return Uri.parse('*');
       }
 

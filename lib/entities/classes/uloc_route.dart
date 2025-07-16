@@ -23,6 +23,7 @@ class ULoCRoute {
 
   ULoCRoute.fromString(String? url) : name = url ?? '';
 
+  /// the declared name of this route
   final String name;
   final Map<String, dynamic> _arguments = {};
   final Map<String, String> _routeParams = {};
@@ -44,6 +45,10 @@ class ULoCRoute {
     return result.join('/');
   }
 
+  /// The actual value of this route
+  /// ```dart
+  /// String get path => uri.toString();
+  /// ```
   String get path => uri.toString();
 
   Uri get uri => Uri.parse(toString());

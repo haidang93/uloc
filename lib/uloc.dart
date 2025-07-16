@@ -80,9 +80,6 @@ class ULoCRouteConfiguration {
     : _configuration = _RoutesConfiguration(routes);
   final _RoutesConfiguration _configuration;
 
-  /// Put this route to MaterialApp.routes
-  RouteMap get routes => _configuration.routes;
-
   /// Put this route to MaterialApp.onGenerateRoute
   Route<dynamic>? Function(RouteSettings settings) get routeBuilder =>
       _configuration.routeBuilder;

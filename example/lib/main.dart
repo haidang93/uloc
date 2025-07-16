@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       initialRoute: Routes.HOME.name,
-      routes: Routes.ulocRouteConfiguration.routes,
       onGenerateRoute: Routes.ulocRouteConfiguration.routeBuilder,
     );
   }
