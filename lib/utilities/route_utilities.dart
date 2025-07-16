@@ -2,8 +2,8 @@ part of '../uloc.dart';
 
 class _RouteUtilities {
   /// extract route parameter from route name
-  static Map<String, dynamic> _parseParam(Uri? routeName, Uri route) {
-    final result = <String, dynamic>{};
+  static List<String> _parseParam(Uri? routeName, Uri route) {
+    final result = <String>[];
 
     if (routeName == null) return result;
 
@@ -11,7 +11,7 @@ class _RouteUtilities {
     final pathSegments = route.pathSegments;
 
     if (patternSegments.length != pathSegments.length) {
-      return {};
+      return [];
     }
 
     for (int i = 0; i < patternSegments.length; i++) {
@@ -19,7 +19,7 @@ class _RouteUtilities {
       final pathSegment = pathSegments[i];
 
       if (patternSegment.startsWith(':') && pathSegment.isNotEmpty) {
-        result[patternSegment.substring(1)] = pathSegment;
+        result.add(pathSegment);
       }
     }
 

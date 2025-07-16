@@ -4,11 +4,13 @@ class RouteDeclaration {
   final String providerName;
   final String provider;
   final String child;
+  final Map<String, String> arguments;
   RouteDeclaration({
     required this.routeName,
     required this.route,
     required this.providerName,
     required this.provider,
+    required this.arguments,
     required this.child,
   });
 }

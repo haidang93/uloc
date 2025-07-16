@@ -51,7 +51,7 @@ extension ContextExtension on BuildContext {
   }
 
   @Deprecated(_deprecatedText)
-  void popUntil(RouteName routeName) {
+  void popUntil(String routeName) {
     if (hasParentRoute) {
       Navigator.of(this).popUntil(ModalRoute.withName(routeName));
     } else {
@@ -61,7 +61,7 @@ extension ContextExtension on BuildContext {
 
   @Deprecated(_deprecatedText)
   Future<T?> getTo<T>(
-    RouteName routeName, {
+    String routeName, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
@@ -78,7 +78,7 @@ extension ContextExtension on BuildContext {
 
   @Deprecated(_deprecatedText)
   Future<T?> off<T, J>(
-    RouteName routeName, {
+    String routeName, {
     Object? arguments,
     J? result,
     PageTransition? transition,
@@ -98,7 +98,7 @@ extension ContextExtension on BuildContext {
 
   @Deprecated(_deprecatedText)
   Future<T?> offAll<T>(
-    RouteName routeName, {
+    String routeName, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,

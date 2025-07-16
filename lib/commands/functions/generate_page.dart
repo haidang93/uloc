@@ -12,6 +12,7 @@ Future generatePage(ArgResults cmdArgs) async {
   Directory dir = Directory(defaultPageDir);
   String pageName = '';
   List<String> pageParameters = [];
+  Map<String, String> args = {};
 
   if (cmdArgs.arguments.isNotEmpty &&
       !cmdArgs.arguments.first.startsWith('-')) {
@@ -35,6 +36,17 @@ Future generatePage(ArgResults cmdArgs) async {
 
   pageParameters = cmdArgs.multiOption(CommandFlag.parameters);
 
+  args.addEntries(
+    cmdArgs.multiOption(CommandFlag.addPageArgs).map((e) {
+      if (e.split('-').length == 2) {
+        String name = e.split('-').first;
+        String type = e.split('-').last;
+        return MapEntry(type, name);
+      }
+      throw Exception('Failed to resolve page argument $e');
+    }),
+  );
+  print(args);
   String viewName = '${pageName.toLowerCase()}_page';
   String controllerName = '${pageName.toLowerCase()}_controller';
 
@@ -104,14 +116,14 @@ Future generatePage(ArgResults cmdArgs) async {
   result.add('  @override');
   result.add('  Widget build(BuildContext context) {');
   result.add('    return Scaffold(');
-  if (pageParameters.contains('name')) {
+  if (pageParameters.contains('name') || args.containsValue('name')) {
     result.add(
       '      appBar: AppBar(title: Text(watch.name ?? "${snakeToPascal(pageName)}")),',
     );
   } else {
     result.add('      appBar: AppBar(title: Text(watch.name)),');
   }
-  if (pageParameters.contains('content')) {
+  if (pageParameters.contains('content') || args.containsValue('content')) {
     result.add(
       '      body: Center(child: Text(watch.content ?? "${snakeToPascal(pageName)} has not yet implemented")),',
     );
@@ -144,20 +156,25 @@ Future generatePage(ArgResults cmdArgs) async {
   result.add("import 'package:uloc/uloc.dart';");
   result.add('');
   result.add('class $controllerClassName extends ULoCProvider {');
-  if (pageParameters.isNotEmpty) {
+  if (pageParameters.isNotEmpty || args.isNotEmpty) {
     for (var paramName in pageParameters) {
       result.add('  final String? $paramName;');
     }
-    result.add(
-      '  $controllerClassName(super.context, {${pageParameters.map((e) => 'this.$e').join(', ')}});',
-    );
+    for (var arg in args.entries) {
+      result.add('  final ${arg.key}? ${arg.value};');
+    }
+    final param = [
+      ...pageParameters,
+      ...args.values,
+    ].map((e) => 'this.$e').join(', ');
+    result.add('  $controllerClassName(super.context, {$param});');
   } else {
     result.add('  $controllerClassName(super.context);');
   }
-  if (!pageParameters.contains('name')) {
+  if (!pageParameters.contains('name') && !args.containsValue('name')) {
     result.add('  String name = "${snakeToPascal(pageName)}";');
   }
-  if (!pageParameters.contains('content')) {
+  if (!pageParameters.contains('content') && !args.containsValue('content')) {
     result.add(
       '  String content = "${snakeToPascal(pageName)} has not yet implemented";',
     );
@@ -207,6 +224,7 @@ Future generatePage(ArgResults cmdArgs) async {
       viewInport: convertPathToImport(viewFile.path),
       controllerInport: convertPathToImport(controllerFile.path),
       pageParameters: pageParameters,
+      pageArgs: args,
     );
   }
 

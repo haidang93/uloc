@@ -8,68 +8,68 @@ class _RoutesConfiguration {
   RouteMap get routes {
     final RouteMap result = {};
     for (var route in _routes) {
-      result[route.routeName] = route.buildRouteMapElement;
+      result[route.routeName.name] = route.buildRouteMapElement;
     }
     return result;
   }
 
   Route<dynamic>? routeBuilder(RouteSettings settings) {
-    final route = Uri.parse(settings.name ?? '');
-    final declaredRouteName = _getDeclaredRoute(route);
-
+    // reconstruct ULoCRoute from string
+    final uri = Uri.parse(settings.name ?? '');
+    final declaredRouteName = _getDeclaredRoute(uri);
     // Handle unknown routes
     if (declaredRouteName == null) {
       throw Exception(
-        'Route "${route.path}" is not declared in routes.dart.\n'
+        'Route "${uri.path}" is not declared in routes.dart.\n'
         'Make sure you have registered this route using the correct name.\n'
         'Hint: Check for typos or missing route declarations in your routes.dart.',
       );
     }
+    final param = _RouteUtilities._parseParam(declaredRouteName, uri);
+    final ulocRoute = ULoCRoute(declaredRouteName.path, routeParams: param);
 
-    PageTransition? transition = PageTransition.values.firstWhere(
-      (e) => e.name == route.queryParameters[transitionParamKey],
-      orElse: () => PageTransition.none,
-    );
-    Curve curve = CurveEnum.values
-        .firstWhere(
-          (e) => e.name == route.queryParameters[curveParamKey],
-          orElse: () => CurveEnum.ease,
-        )
-        .curve;
-
-    Object? arguments = settings.arguments;
-    if (arguments == null || arguments is Map<String, dynamic>) {
-      arguments ??= <String, dynamic>{};
-      arguments = {
-        ...(arguments as Map<String, dynamic>),
-        ...route.queryParametersAll,
-      };
+    PageTransition transition = PageTransition.none;
+    Curve curve = CurveEnum.ease.curve;
+    List<BuildContext> ancestorContexts = [];
+    final arguments = settings.arguments;
+    if (arguments is UlocArguments) {
+      final transitionName = arguments.argumentsMap?[transitionParamKey];
+      transition = PageTransition.values.firstWhere(
+        (e) => e.name == transitionName,
+        orElse: () => PageTransition.none,
+      );
+      curve = arguments.argumentsMap?[curveParamKey] ?? CurveEnum.ease.curve;
+      ancestorContexts = arguments.argumentsMap?[ancestorContextsKey] ?? [];
     }
 
     // Handle routes with parameters
-    final param = _RouteUtilities._parseParam(declaredRouteName, route);
-    final previousProviderCache = ULoCProvider._takePreviousProviderCache();
 
     if (transition == PageTransition.none) {
       return MaterialPageRoute(
         builder: (context) {
           return routes[declaredRouteName.path]!(
             context,
-            param,
-            previousProviderCache?._ancestorContexts,
+            ulocRoute,
+            ancestorContexts,
           );
         },
-        settings: RouteSettings(name: route.toString(), arguments: arguments),
+        settings: RouteSettings(
+          name: ulocRoute.toString(),
+          arguments: arguments,
+        ),
       );
     } else {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             routes[declaredRouteName.path]!(
               context,
-              param,
-              previousProviderCache?._ancestorContexts,
+              ulocRoute,
+              ancestorContexts,
             ),
-        settings: RouteSettings(name: route.toString(), arguments: arguments),
+        settings: RouteSettings(
+          name: ulocRoute.toString(),
+          arguments: arguments,
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return _RouteUtilities.buildTransition(
             context,

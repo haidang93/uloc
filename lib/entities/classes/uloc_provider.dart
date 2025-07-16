@@ -8,7 +8,12 @@ class ULoCProvider with ChangeNotifier {
   ULoCProvider(this.context);
 
   /// get arguments from previous route
-  Object? get arguments => context.routeArguments;
+  Object? get arguments {
+    if (context.routeArguments is UlocArguments) {
+      return (context.routeArguments as UlocArguments).flutterArguments;
+    }
+    return context.routeArguments;
+  }
 
   /// moute state of this controller/widget
   bool get mounted => context.mounted;
@@ -34,17 +39,6 @@ class ULoCProvider with ChangeNotifier {
   }
 
   ///
-  static ULoCProvider? _previousProviderCache;
-
-  static ULoCProvider? _takePreviousProviderCache() {
-    final temp = _previousProviderCache;
-    _previousProviderCache = null;
-    return temp;
-  }
-
-  void _storeCache() {
-    _previousProviderCache = this;
-  }
 
   /// ancestorProvider
   List<BuildContext> _ancestorContexts = [];
@@ -52,7 +46,7 @@ class ULoCProvider with ChangeNotifier {
   /// Find provider from previous route
   P? findAncestorProviderOfType<P extends ULoCProvider>({
     bool listen = false,
-    RouteName? location,
+    String? location,
   }) {
     try {
       for (BuildContext ancestorContext in _ancestorContexts) {
@@ -112,64 +106,79 @@ class ULoCProvider with ChangeNotifier {
     }
   }
 
-  void popUntil(RouteName routeName) {
+  void popUntil(ULoCRoute route) {
     if (context.hasParentRoute) {
-      Navigator.of(context).popUntil(ModalRoute.withName(routeName));
+      Navigator.of(context).popUntil(ModalRoute.withName(route.name));
     } else {
       context.closeKeyboard();
     }
   }
 
   Future<T?> getTo<T, P>(
-    RouteName routeName, {
+    ULoCRoute route, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('getTo $routeName');
-    _storeCache();
+    _RouteUtilities.log('getTo ${route.path}');
     context.closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _buildUlocArguments(
+      route,
+      arguments,
+      route._arguments,
+      transition,
+      curve,
+      _ancestorContexts,
+    );
     return await Navigator.of(
       context,
-    ).pushNamed<T>(uri.toString(), arguments: arguments);
+    ).pushNamed<T>(route.path, arguments: ulocArguments);
   }
 
   Future<T?> off<T, J>(
-    RouteName routeName, {
+    ULoCRoute route, {
     Object? arguments,
     J? result,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('off $routeName');
-    _storeCache();
+    _RouteUtilities.log('off ${route.path}');
     context.closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _buildUlocArguments(
+      route,
+      arguments,
+      route._arguments,
+      transition,
+      curve,
+      _ancestorContexts,
+    );
     return await Navigator.of(context).pushReplacementNamed<T, J>(
-      uri.toString(),
+      route.path,
       result: result,
-      arguments: arguments,
+      arguments: ulocArguments,
     );
   }
 
   Future<T?> offAll<T>(
-    RouteName routeName, {
+    ULoCRoute route, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('offAll $routeName');
-    _storeCache();
+    _RouteUtilities.log('offAll ${route.path}');
     context.closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _buildUlocArguments(
+      route,
+      arguments,
+      route._arguments,
+      transition,
+      curve,
+      _ancestorContexts,
+    );
     return await Navigator.of(context).pushNamedAndRemoveUntil<T>(
-      uri.toString(),
+      route.path,
       (route) => false,
-      arguments: arguments,
+      arguments: ulocArguments,
     );
   }
 
@@ -264,19 +273,23 @@ class ULoCProvider with ChangeNotifier {
     );
   }
 
-  Uri _processRouteQuery(
-    Uri uri,
+  UlocArguments _buildUlocArguments(
+    ULoCRoute route,
+    Object? flutterArguments,
+    Map<String, dynamic> arguments,
     PageTransition? transition,
     CurveEnum? curve,
-  ) {
-    return uri.replace(
-      queryParameters: {
-        ...uri.queryParametersAll,
-        transitionParamKey: transition?.name,
-        curveParamKey: curve?.name,
-      },
-    );
-  }
+    List<BuildContext> ancestorContexts,
+  ) => UlocArguments._private(
+    route: route,
+    flutterArguments: arguments,
+    argumentsMap: {
+      ...arguments,
+      transitionParamKey: transition?.name,
+      curveParamKey: curve?.name,
+      ancestorContextsKey: _ancestorContexts,
+    },
+  );
 
   Route<T> _buildRoute<T>({
     required Widget page,

@@ -6,6 +6,7 @@ class CommandFlag {
   static const routeDeclarationDir = 'route-declaration-dir';
   static const routeTargetDir = 'route-target-dir';
   static const parameters = 'parameters';
+  static const addPageArgs = 'add-page-arg';
   static const target = 'target';
   static const name = 'name';
 }

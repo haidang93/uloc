@@ -48,11 +48,16 @@ class Command {
           help:
               "List of page parameters separated by commas. Ex: id,name,email",
         )
+        ..addMultiOption(
+          CommandFlag.addPageArgs,
+          abbr: CommandFlag.addPageArgs.abbr,
+          help: "Add page arguments. Ex: <name>-<type> => title-String",
+        )
         ..addFlag(
           CommandFlag.genRoute,
           abbr: CommandFlag.genRoute.abbr,
           help:
-              "enable to generate route declaration after create page. Default: lib/routes/routes.uloc.g.dart",
+              "enable to generate route declaration and route config after create page.",
         )
         ..addOption(
           CommandFlag.routeDeclarationDir,

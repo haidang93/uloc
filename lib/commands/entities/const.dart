@@ -9,6 +9,7 @@ const annotation = '@ULoCDeclaration()';
 
 const transitionParamKey = '@transition';
 const curveParamKey = '@curve';
+const ancestorContextsKey = '@ancestorContexts';
 
 final pathSeparator = Platform.pathSeparator;
 

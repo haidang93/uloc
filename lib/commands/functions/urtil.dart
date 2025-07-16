@@ -16,16 +16,20 @@ String snakeToPascal(String input) {
 
 Map<String, RouteDeclaration> parseULoCRoutesToJson(String source) {
   final routeMap = <String, RouteDeclaration>{};
+  String cleaned = source
+      .replaceAll(RegExp(r'[\r\n]+'), '')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
 
   final routeRegex = RegExp(
-    r"'(\w+)':\s*ULoCRoute\(\s*"
+    r"'(\w+)':\s*ULoCRouteDefine\(\s*"
     r"route:\s*'([^']+)',\s*"
     r"provider:\s*\(([^)]+)\)\s*=>\s*([^\n]+?),\s*"
     r"child:\s*([^\n,]+)",
     multiLine: true,
   );
 
-  for (final match in routeRegex.allMatches(source)) {
+  for (final match in routeRegex.allMatches(cleaned)) {
     final key = match.group(1) ?? ''; // e.g. 'HOME'
     final route = match.group(2) ?? ''; // e.g. '/'
     final providerArgs = match.group(3) ?? ''; // e.g. context, _
@@ -40,16 +44,35 @@ Map<String, RouteDeclaration> parseULoCRoutesToJson(String source) {
     ).firstMatch(providerBody ?? '');
     final providerName = providerNameMatch?.group(1) ?? 'UnknownProvider';
 
+    final providerFunction = '($providerArgs) => ${providerBody}';
+    final args = extractArguments(providerFunction);
+
     routeMap[key] = RouteDeclaration(
       routeName: key,
       route: route,
       providerName: providerName,
-      provider: '($providerArgs) => $providerBody',
+      provider: providerFunction,
+      arguments: args,
       child: child,
     );
   }
 
   return routeMap;
+}
+
+Map<String, String> extractArguments(String source) {
+  final regex = RegExp(r"arguments<(\w+)>\(\s*'(\w+)'\s*\)");
+  final matches = regex.allMatches(source);
+
+  final Map<String, String> result = {};
+
+  for (final match in matches) {
+    final type = match.group(1)!; // e.g., int
+    final name = match.group(2)!; // e.g., number
+    result[type] = name;
+  }
+
+  return result;
 }
 
 String convertPathToImport(String path) {

@@ -18,7 +18,7 @@ class GenerateCommand {
         CommandFlag.genPage,
         CommandFlag.genPage.shortHand,
       ].contains(cmdArgs.command?.name)) {
-        generatePage(cmdArgs.command!);
+        await generatePage(cmdArgs.command!);
         return;
       }
 

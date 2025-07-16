@@ -60,8 +60,14 @@ void generateRoute(ArgResults cmdArgs) {
   result.add('  Routes._();');
   result.add('');
   for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
-    result.add(_buildRouteName(entry.key, entry.value.route));
+    result.add(
+      _buildRouteName(entry.key, entry.value.route, entry.value.arguments),
+    );
   }
+  result.add('');
+  result.add(
+    '  static ULoCRoute fromString(String? url) => ULoCRoute.fromString(url);',
+  );
   result.add('');
   result.add('   /// use this to pass to [MaterialApp] Route setting');
   result.add(
@@ -85,16 +91,29 @@ void generateRoute(ArgResults cmdArgs) {
   exit(0);
 }
 
-String _buildRouteName(String name, String value) {
-  if (!value.contains(':')) {
-    return "  static const RouteName $name = '$value';";
-  } else {
+String _buildRouteName(String name, String value, Map<String, String> args) {
+  if (value.contains(':') || args.isNotEmpty) {
     List<String> paramList = value
         .split('/')
         .where((e) => e.contains(':'))
         .map((e) => e.replaceAll(':', ''))
         .toList();
 
-    return "  static RouteName $name({${paramList.map((e) => 'String? $e').join(', ')}}) => ${paramList.map((e) => '$e == null').join(' && ')} ? '$value' : '${value.replaceAllMapped(RegExp(r':(\w+)'), (match) => '\${${match[1]} ?? \'\' }')}';";
+    final params = paramList.map((e) => 'String? $e').join(', ');
+    final arguments = args.entries
+        .map((e) => '${e.key}? ${e.value}')
+        .join(', ');
+
+    final functionParam = [params, arguments].join(', ');
+    final routeParams = paramList.isNotEmpty
+        ? ', routeParams: [${paramList.join(', ')}]'
+        : '';
+    final argumentsText = args.isNotEmpty
+        ? ", arguments: {${args.values.map((e) => "'$e': $e").join(', ')}}"
+        : '';
+
+    return "  static ULoCRoute $name({$functionParam}) => ULoCRoute( '$value'$routeParams$argumentsText );";
+  } else {
+    return "  static ULoCRoute $name = ULoCRoute('$value');";
   }
 }

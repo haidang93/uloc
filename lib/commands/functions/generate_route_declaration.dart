@@ -15,6 +15,7 @@ Future generateRouteDeclaration({
   required String viewInport,
   required String pageName,
   required List<String> pageParameters,
+  required Map<String, String> pageArgs,
   required ArgResults cmdArgs,
   required Stream<String> stdInputStream,
 }) async {
@@ -43,34 +44,45 @@ Future generateRouteDeclaration({
 
   final route = ['', pageName, ...pageParameters.map((e) => ':$e')].join('/');
 
-  final provider = pageParameters.isNotEmpty
-      ? "(context, params) => $controllerClassName(context, ${pageParameters.map((e) => "$e: params?['$e']").join(', ')})"
-      : "(context, _) => $controllerClassName(context)";
+  final params = pageParameters.map((e) => "$e: route?.param('$e')").join(', ');
+  final arguments = pageArgs.entries
+      .map((e) => "${e.value}: route?.arguments<${e.key}>('${e.value}')")
+      .join(', ');
 
+  final functionParam = [params, arguments].join(', ');
+  print(functionParam);
+  final provider = pageParameters.isNotEmpty || pageArgs.isNotEmpty
+      ? "(context, route) => $controllerClassName( context, $functionParam )"
+      : "(context, _) => $controllerClassName(context)";
+  print(provider);
   if (routesMap[routeName] != null) {
     await checkExistAndExit(routeName, stdInputStream);
-  } else {
-    routesMap[routeName] = RouteDeclaration(
-      routeName: routeName,
-      route: route,
-      providerName: controllerClassName,
-      provider: provider,
-      child: viewClassName,
-    );
   }
+  routesMap[routeName] = RouteDeclaration(
+    routeName: routeName,
+    route: route,
+    providerName: controllerClassName,
+    provider: provider,
+    arguments: pageArgs,
+    child: viewClassName,
+  );
 
   List<String> result = [];
 
   result.add(imports);
-  result.add(controllerInport);
-  result.add(viewInport);
+  if (!imports.contains(controllerInport)) {
+    result.add(controllerInport);
+  }
+  if (!imports.contains(viewInport)) {
+    result.add(viewInport);
+  }
   result.add('');
   result.add('@ULoCDeclaration()');
   result.add('class MyRoutes extends ULoCRouteDeclaration {');
   result.add('  @override');
-  result.add('  Map<String, ULoCRoute<ULoCProvider>> get route => {');
+  result.add('  Map<String, ULoCRouteDefine<ULoCProvider>> get route => {');
   for (RouteDeclaration declaration in routesMap.values) {
-    result.add("    '${declaration.routeName}': ULoCRoute(");
+    result.add("    '${declaration.routeName}': ULoCRouteDefine(");
     result.add("      route: '${declaration.route}',");
     result.add("      provider: ${declaration.provider},");
     result.add("      child: ${declaration.child},");

@@ -11,18 +11,18 @@ part of '../../uloc.dart';
 ///  @ULoCDeclaration()
 /// class MyRoutes extends ULoCRouteDeclaration {
 ///   @override
-///   Map<String, ULoCRoute<ULoCProvider>> get route => {
-///     'WILDCARD': ULoCRoute(
+///   Map<String, ULoCRouteDefine<ULoCProvider>> get route => {
+///     'WILDCARD': ULoCRouteDefine(
 ///       route: '*',
 ///       provider: (context, _) => HomeController(context),
 ///       child: HomePage,
 ///     ),
-///     'HOME': ULoCRoute(
+///     'HOME': ULoCRouteDefine(
 ///       route: '/',
 ///       provider: (context, _) => HomeController(context),
 ///       child: HomePage,
 ///     ),
-///     'DETAIL': ULoCRoute(
+///     'DETAIL': ULoCRouteDefine(
 ///       route: '/detail/:id/:type',
 ///       provider: (context, params) =>
 ///           DetailController(context, id: params?['id'], type: params?['type']),
@@ -39,14 +39,18 @@ part of '../../uloc.dart';
 /// uloc gen-page home -g
 /// ```
 /// to generate new page and route at the same time
-class ULoCRoute<P extends ULoCProvider> {
-  ULoCRoute({required this.route, required this.provider, required this.child});
+class ULoCRouteDefine<P extends ULoCProvider> {
+  ULoCRouteDefine({
+    required this.route,
+    required this.provider,
+    required this.child,
+  });
   final String route;
-  final P Function(BuildContext context, Map<String, dynamic>? params) provider;
+  final P Function(BuildContext context, ULoCRoute? route) provider;
   final Type child;
 }
 
 abstract class ULoCRouteDeclaration {
   /// Map \<RouteName, Properties\>
-  Map<String, ULoCRoute> get route;
+  Map<String, ULoCRouteDefine> get route;
 }

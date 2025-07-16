@@ -6,17 +6,17 @@ class RouteProperties<P extends ULoCProvider> {
     required this.provider,
     required this.child,
   });
-  final RouteName routeName;
-  final P Function(BuildContext context, Map<String, dynamic>? params) provider;
+  final ULoCRoute routeName;
+  final P Function(BuildContext context, ULoCRoute? route) provider;
   final Widget child;
 
   Widget buildRouteMapElement(
     BuildContext context, [
-    Map<String, dynamic>? params = const {},
+    ULoCRoute? route,
     List<BuildContext>? ancestorContext,
   ]) {
     return ChangeNotifierProvider<P>(
-      create: (context) => provider(context, params),
+      create: (context) => provider(context, route),
       child: _RouteWithProvider<P>(
         ancestorContext: ancestorContext,
         child: child,
