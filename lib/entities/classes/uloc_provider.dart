@@ -15,6 +15,13 @@ class ULoCProvider with ChangeNotifier {
     return context.routeArguments;
   }
 
+  Map<String, dynamic>? get ulocArguments {
+    if (context.routeArguments is UlocArguments) {
+      return (context.routeArguments as UlocArguments).argumentsMap;
+    }
+    return null;
+  }
+
   /// moute state of this controller/widget
   bool get mounted => context.mounted;
 
@@ -46,17 +53,28 @@ class ULoCProvider with ChangeNotifier {
   /// Find provider from previous route
   P? findAncestorProviderOfType<P extends ULoCProvider>({
     bool listen = false,
-    String? location,
+
+    /// location must be String || ULoCRoute || null
+    dynamic location,
   }) {
+    assert(location == null || location is String || location is ULoCRoute);
+
+    String? locationString;
+
+    if (location is String) {
+      locationString = location;
+    } else if (location is ULoCRoute) {
+      locationString = location.path;
+    }
+
     try {
       for (BuildContext ancestorContext in _ancestorContexts) {
-        P? found;
-
-        if (location != null &&
-            ancestorContext.location.path != Uri.parse(location).path) {
+        if (locationString != null &&
+            ancestorContext.location.path != Uri.parse(locationString).path) {
           continue;
         }
 
+        P? found;
         if (listen) {
           found = ancestorContext.watch<P?>();
         } else {
@@ -68,7 +86,13 @@ class ULoCProvider with ChangeNotifier {
       }
       throw Exception();
     } catch (e) {
-      _RouteUtilities.log("Can't find any provider with name $P");
+      if (locationString != null) {
+        _RouteUtilities.log(
+          "Can't find any provider with name $P with location: $locationString",
+        );
+      } else {
+        _RouteUtilities.log("Can't find any provider with name $P");
+      }
       return null;
     }
   }
@@ -282,7 +306,7 @@ class ULoCProvider with ChangeNotifier {
     List<BuildContext> ancestorContexts,
   ) => UlocArguments._private(
     route: route,
-    flutterArguments: arguments,
+    flutterArguments: flutterArguments,
     argumentsMap: {
       ...arguments,
       transitionParamKey: transition?.name,
