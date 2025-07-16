@@ -1,4 +1,4 @@
-## **🔗 ULoC — UI-Logic-Controller / Router for Flutter**
+## ** ULoC — UI-Logic-Controller / Router for Flutter**
 
 **ULoC** is a developer-friendly tool that combines routing, logic injection, and screen scaffolding into one seamless workflow for Flutter.  
 It's designed to work perfectly with **Provider**, and follows scalable patterns like **MVC** or **MVVM**.
@@ -7,7 +7,7 @@ It's designed to work perfectly with **Provider**, and follows scalable patterns
 
 ---
 
-## 🧭 Overview
+## Overview
 
 - 🔧 Based on `provider` for easy state and logic injection
 - 🔁 Auto-generates `Routes` and `ULoC` map from a `@ULoCDeclaration`
@@ -18,20 +18,21 @@ It's designed to work perfectly with **Provider**, and follows scalable patterns
 
 ---
 
-## ✨ Functionalities
+## Functionalities
 
-- Route generate
+- Route generate with type safe parameter
 - Widget generate
 - Separate view and controller
 - Convenient lifecycle hook
 - Access to context and setstate from any where
+- find ancestor provider from previous pages
 - Support paramaters and URL query - Great for deeplink
-- Easy navigation with context extension
+- Easy navigation with custom navigational fucntions in providers
 - Named and Widget navigation
 
 ---
 
-## 📦 Installation
+## Installation
 
 In your Flutter project:
 
@@ -48,7 +49,7 @@ dart pub get
 
 ---
 
-## ⚙️ CLI Commands
+## CLI Commands
 
 ```sh
 # To install globally:
@@ -88,9 +89,13 @@ uloc gp book_detail --parameters id,title
 uloc gp book_detail --parameters id --parameters title --gen-route --route-declaration-dir lib/routes/routes.dart --route-target-dir lib/routes/routes.uloc.g.dart
 uloc gp home -g -r lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 
+# Generate new widget page with type safe parameter
+# Please manually import class path after generate
+uloc gp detail_page --add-page-arg data-BookDetail -g
+
 ```
 
-## ✨ Route Declaration Example
+## Route Declaration Example
 
 ```dart
 @ULoCDeclaration()
@@ -107,10 +112,13 @@ class MyRoutes extends ULoCRouteDeclaration {
       provider: (context, _) => HomeController(context),
       child: HomePage,
     ),
-    'DETAIL': ULoCRoute(
-      route: '/detail/:id/:type',
-      provider: (context, params) =>
-          DetailController(context, id: params?['id'], type: params?['type']),
+    'DETAIL': ULoCRouteDefine(
+      route: '/detail/:id',
+      provider: (context, route) => DetailController(
+        context,
+        id: route?.param('id'),
+        data: route?.arguments<BookDetail>('data'),
+      ),
       child: DetailPage,
     ),
   };
@@ -119,15 +127,18 @@ class MyRoutes extends ULoCRouteDeclaration {
 
 ---
 
-## 📄 Generated Output
+## Generated Output
 
 ```dart
 class Routes {
   Routes._();
 
-  static const RouteName WILDCARD = '*';
-  static const RouteName HOME = '/';
-  static RouteName DETAIL({String? id, String? type}) => id == null && type == null ? '/detail/:id/:type' : '/detail/$id/$type';
+  static ULoCRoute WILDCARD = ULoCRoute('*');
+  static ULoCRoute HOME = ULoCRoute('/');
+  static ULoCRoute DETAIL({String? id, BookDetail? data}) =>
+      ULoCRoute('/detail/:id', routeParams: [id], arguments: {'data': data});
+
+  static ULoCRoute fromString(String? url) => ULoCRoute.fromString(url);
 
   /// use this to pass to [MaterialApp] Route setting
   static final ULoCRouteConfiguration ulocRouteConfiguration = ULoCRouteConfiguration([
@@ -143,7 +154,11 @@ class Routes {
     ),
     RouteProperties<DetailController>(
       routeName: Routes.DETAIL(),
-      provider: (context, params) => DetailController(context, id: params?['id'], type: params?['type']),
+      provider: (context, route) => DetailController(
+        context,
+        id: route?.param('id'),
+        data: route?.arguments<BookDetail>('data'),
+      ),
       child: DetailPage(),
     ),
   ]);
@@ -153,13 +168,13 @@ class Routes {
 
 --
 
-## 📄 Controller
+## Controller
 
 ```dart
 class DetailController extends ULoCProvider {
   final String? id;
-  final String? type;
-  DetailController(super.context, {this.id, this.type});
+  final BookDetail? data;
+  DetailController(super.context, {this.id, this.data});
   String name = "Detail";
   String content = "Detail has not yet implemented";
 
@@ -172,6 +187,12 @@ class DetailController extends ULoCProvider {
     // get query from route
     String utmSource = query('utm_source');
     Map<String, dynamic> allQuery = queryParametersAll;
+
+    // get Flutter route arguments
+    final dynamic args =  arguments;
+
+    // get ULoC route arguments
+    final Map<String, dynamic>? args =  ulocArguments;
   }
 
   @override
@@ -200,7 +221,7 @@ class DetailController extends ULoCProvider {
 
 --
 
-## 📄 View
+## View
 
 ```dart
 class DetailPage extends StatefulWidget {
@@ -249,7 +270,7 @@ class _DetailPageState extends State<DetailPage> {
 
 --
 
-## 📄 Usage
+## Route Usage
 
 ```dart
 void main() {
@@ -263,8 +284,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ULoC Demo',
-      initialRoute: Routes.HOME,
-      routes: Routes.ulocRouteConfiguration.routes,
+      initialRoute: Routes.HOME.name,
       onGenerateRoute: Routes.ulocRouteConfiguration.routeBuilder,
     );
   }
@@ -274,7 +294,7 @@ class MyApp extends StatelessWidget {
 
 ---
 
-## 🔄 Lifecycle Hooks
+## Lifecycle Hooks
 
 Each controller can optionally define lifecycle methods:
 You can setstate() in controller
@@ -300,6 +320,33 @@ void onDispose() {
 
 ---
 
+## Find ancestor provider from previous pages
+
+Each controller can optionally define lifecycle methods:
+You can setstate() in controller
+Each time setstate() is called, Widgets what are watching will be rerendered
+
+```dart
+class MyController extends ULoCProvider{
+  // find and use functions
+  HomeController? homeController = findAncestorProviderOfType<HomeController>();
+
+  // find and watch data
+  String? get watchHomeData => findAncestorProviderOfType<HomeController>(listen: true)?.data;
+
+  // find provider with exact location match
+  HomeController? homeController = findAncestorProviderOfType<HomeController>(
+    location: "/books/detail/the-invisible-man",
+  );
+
+  HomeController? homeController = findAncestorProviderOfType<HomeController>(
+    location: Routes.DETAIL(id: "1"),
+  );
+}
+```
+
+---
+
 ## Architecture Friendly
 
 ULoC fits into modern app structure:
@@ -310,26 +357,60 @@ ULoC fits into modern app structure:
 
 ---
 
-## 🔗 Navigation, Deep Linking
+## Navigation, Deep Linking
 
 Named routes support `:params` like `/user/:id`. Navigate with:
 
 ```dart
-// named navigation
-context.getTo(Routes.Detail(id: '42'))
 
-// named navigation with query
-context.getTo(Routes.Home.withQuery({ 'utm_source': 'facebook'}))
+class Home extends ULoCProvider {
+  DetailController(super.context);
 
-// widget navigation with query
-context.addRoute(
+  void goToDetailHandle(){
+    // named navigation
+    getTo(Routes.Detail(id: '42'))
+  }
+
+  void goToDetailWithQueryHandle(){
+    // named navigation with query
+    getTo(Routes.Home.withQuery({ 'utm_source': 'facebook'}))
+  }
+
+  void goToCustomPage(){
+    // widget navigation with query
+    addRoute(
       WidgetPage(),
       provider: (context) => WidgetController(context),
       name: 'custom_route'.withQuery({ 'utm_source': 'facebook'}),
     );
+  }
+}
 ```
 
 Works with Firebase Dynamic Links, URI parsers, etc.
+
+```dart
+
+  class DynamicLinkHandler{
+    precessLink(String? url){
+      final route = Routes.fromString(url)
+
+      if(isAppRoute){
+        getTo(route)
+
+        // OR
+
+        return await Navigator.of(
+            context,
+          ).pushNamed<T>(url);
+
+      } else {
+        // other process
+      }
+    }
+  }
+
+```
 
 ---
 
