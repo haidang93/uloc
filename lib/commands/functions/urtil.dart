@@ -1,4 +1,8 @@
-part of '../../../uloc.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:uloc/commands/const.dart';
+import 'package:uloc/commands/route_declaration.dart';
 
 String snakeToPascal(String input) {
   return input

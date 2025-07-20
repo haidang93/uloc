@@ -1,4 +1,11 @@
-part of '../../../uloc.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:args/args.dart';
+import 'package:uloc/commands/cmd_enum.dart';
+import 'package:uloc/commands/const.dart';
+import 'package:uloc/commands/functions/generate_route_declaration.dart';
+import 'package:uloc/commands/functions/urtil.dart';
 
 Future generatePage(ArgResults cmdArgs) async {
   Directory dir = Directory(defaultPageDir);

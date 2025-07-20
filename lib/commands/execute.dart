@@ -1,4 +1,10 @@
-part of '../../uloc.dart';
+import 'dart:io';
+
+import 'package:uloc/commands/cmd_enum.dart';
+import 'package:uloc/commands/command.dart';
+import 'package:uloc/commands/const.dart';
+import 'package:uloc/commands/functions/generate_page.dart';
+import 'package:uloc/commands/functions/generate_route.dart';
 
 class ExecuteCommand {
   final Command _command;
