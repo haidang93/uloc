@@ -47,9 +47,15 @@ void generateRoute(ArgResults cmdArgs) {
   List<String> result = [];
 
   result.add('///');
-  result.add('/// **************************************************');
-  result.add('/// **** [GENERATED CODE - DO NOT MODIFY BY HAND] ****');
-  result.add('/// **************************************************');
+  result.add(
+    '/// **************************************************************',
+  );
+  result.add(
+    '/// **** [GENERATED CODE - ONLY MODIFY IMPORT PATH IF NEEDED] ****',
+  );
+  result.add(
+    '/// **************************************************************',
+  );
   result.add('///');
   result.add(
     '// ignore_for_file: constant_identifier_names, non_constant_identifier_names, dangling_library_doc_comments',

@@ -36,11 +36,13 @@ Future generateRouteDeclaration({
 
   final content = declaredFile.readAsStringSync();
 
-  if (!content.contains(annotation)) {
-    throw Exception('$customDeclaredDir Cannot find ULoCDeclaration');
-  }
+  String imports = '';
 
-  final imports = content.split(annotation).first.trim();
+  if (content.contains(annotation)) {
+    imports = content.split(annotation).first.trim();
+  } else {
+    imports = "import 'package:uloc/uloc.dart';";
+  }
 
   final routesMap = parseULoCRoutesToJson(content);
 
