@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.15] - 2025-07-09
+
+### ✨ Update
+
+- Fix CLI import
+
 ## [1.0.14] - 2025-07-09
 
 ### ✨ Update
