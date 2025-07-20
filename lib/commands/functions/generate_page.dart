@@ -45,7 +45,6 @@ Future generatePage(ArgResults cmdArgs) async {
       throw Exception('Failed to resolve page argument $e');
     }),
   );
-  print(args);
   String viewName = '${pageName.toLowerCase()}_page';
   String controllerName = '${pageName.toLowerCase()}_controller';
 

@@ -30,6 +30,10 @@ Future generateRouteDeclaration({
     declaredFile = File(customDeclaredDir);
   }
 
+  if (!declaredFile.existsSync()) {
+    declaredFile.createSync(recursive: true);
+  }
+
   final content = declaredFile.readAsStringSync();
 
   if (!content.contains(annotation)) {
@@ -50,11 +54,11 @@ Future generateRouteDeclaration({
       .join(', ');
 
   final functionParam = [params, arguments].join(', ');
-  print(functionParam);
+
   final provider = pageParameters.isNotEmpty || pageArgs.isNotEmpty
       ? "(context, route) => $controllerClassName( context, $functionParam )"
       : "(context, _) => $controllerClassName(context)";
-  print(provider);
+
   if (routesMap[routeName] != null) {
     await checkExistAndExit(routeName, stdInputStream);
   }
