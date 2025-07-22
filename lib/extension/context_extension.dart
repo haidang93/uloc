@@ -41,7 +41,6 @@ extension ContextExtension on BuildContext {
   ///
   ///
   /// navigational methods
-  @Deprecated(_deprecatedText)
   void pop<T extends Object?>([T? result]) {
     if (hasParentRoute) {
       Navigator.of(this).pop<T>(result);
@@ -50,7 +49,6 @@ extension ContextExtension on BuildContext {
     }
   }
 
-  @Deprecated(_deprecatedText)
   void popUntil(String routeName) {
     if (hasParentRoute) {
       Navigator.of(this).popUntil(ModalRoute.withName(routeName));
