@@ -17,6 +17,12 @@ class _RoutesConfiguration {
     final declaredRouteName = _getDeclaredRoute(uri);
     // Handle unknown routes
     if (declaredRouteName == null) {
+      if (settings.name == '/') {
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(),
+          settings: settings,
+        );
+      }
       throw Exception(
         'Route "${uri.path}" is not declared in routes.dart.\n'
         'Make sure you have registered this route using the correct name.\n'
