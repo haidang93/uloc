@@ -82,7 +82,7 @@ void generateRoute(ArgResults cmdArgs) {
   for (MapEntry<String, RouteDeclaration> entry in routesMap.entries) {
     result.add('    RouteProperties<${entry.value.providerName}>(');
     result.add(
-      '      routeName: Routes.${entry.key}${(entry.value.route.contains(':')) ? '()' : ''},',
+      '      routeName: Routes.${entry.key}${(entry.value.route.contains(':') || entry.value.arguments.isNotEmpty) ? '()' : ''},',
     );
     result.add('      provider: ${entry.value.provider},');
     result.add('      child: ${entry.value.child}(),');
@@ -110,7 +110,10 @@ String _buildRouteName(String name, String value, Map<String, String> args) {
         .map((e) => '${e.key}? ${e.value}')
         .join(', ');
 
-    final functionParam = [params, arguments].join(', ');
+    final functionParam = [
+      params,
+      arguments,
+    ].where((e) => e.isNotEmpty).join(', ');
     final routeParams = paramList.isNotEmpty
         ? ', routeParams: [${paramList.join(', ')}]'
         : '';

@@ -55,7 +55,10 @@ Future generateRouteDeclaration({
       .map((e) => "${e.value}: route?.arguments<${e.key}>('${e.value}')")
       .join(', ');
 
-  final functionParam = [params, arguments].join(', ');
+  final functionParam = [
+    params,
+    arguments,
+  ].where((e) => e.isNotEmpty).join(', ');
 
   final provider = pageParameters.isNotEmpty || pageArgs.isNotEmpty
       ? "(context, route) => $controllerClassName( context, $functionParam )"
