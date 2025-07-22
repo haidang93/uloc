@@ -17,7 +17,7 @@ class ULoCRoute {
 
     for (var i = 0; i < _paramNames.length; i++) {
       final key = _paramNames[i];
-      _routeParams[key] = routeParams?[i] ?? '';
+      _routeParams[key] = routeParams?[i];
     }
   }
 
@@ -26,7 +26,7 @@ class ULoCRoute {
   /// the declared name of this route
   final String name;
   final Map<String, dynamic> _arguments = {};
-  final Map<String, String> _routeParams = {};
+  final Map<String, String?> _routeParams = {};
 
   List<String> _paramNames = <String>[];
 
