@@ -2,38 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.18] - 2025-07-09
+## [1.0.19]
 
 ### ✨ Update
 
 - Fix bug
 
-## [1.0.17] - 2025-07-09
+## [1.0.18]
 
 ### ✨ Update
 
 - Fix bug
 
-## [1.0.16] - 2025-07-09
+## [1.0.17]
 
 ### ✨ Update
 
 - Fix bug
 
-## [1.0.15] - 2025-07-09
+## [1.0.16]
+
+### ✨ Update
+
+- Fix bug
+
+## [1.0.15]
 
 ### ✨ Update
 
 - Fix CLI import
 
-## [1.0.14] - 2025-07-09
+## [1.0.14]
 
 ### ✨ Update
 
 - Can access to controllers from previous route
 - Support type safe parameter
 
-## [1.0.13] - 2025-07-08
+## [1.0.13]
 
 🎉 Initial release!
 
