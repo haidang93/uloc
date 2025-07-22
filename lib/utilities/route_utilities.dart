@@ -18,7 +18,9 @@ class _RouteUtilities {
       final patternSegment = patternSegments[i];
       final pathSegment = pathSegments[i];
 
-      if (patternSegment.startsWith(':') && pathSegment.isNotEmpty) {
+      if (patternSegment.startsWith(':') &&
+          pathSegment.isNotEmpty &&
+          patternSegment != pathSegment) {
         result.add(pathSegment);
       }
     }
