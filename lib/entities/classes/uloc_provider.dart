@@ -1,5 +1,53 @@
 part of '../../uloc.dart';
 
+/// ```dart
+/// class DetailController extends ULoCProvider {
+///   final String? id;
+///   final BookDetail? data;
+///   DetailController(super.context, {this.id, this.data});
+///   String name = "Detail";
+///   String content = "Detail has not yet implemented";
+///
+///   int count = 0;
+///
+///   @override
+///   void onInit() {
+///     super.onInit();
+///
+///     // get query from route
+///     String utmSource = query('utm_source');
+///     Map<String, dynamic> allQuery = queryParametersAll;
+///
+///     // get Flutter route arguments
+///     final dynamic args =  arguments;
+///
+///     // get ULoC route arguments
+///     final Map<String, dynamic>? args =  ulocArguments;
+///   }
+///
+///   @override
+///   void onReady() {
+///     super.onReady();
+///   }
+///
+///   @override
+///   void onDispose() {
+///     super.onDispose();
+///   }
+///
+///   void increment() {
+///     count++;
+///     setstate();
+///   }
+///
+///   void decrement() {
+///     setstate(() {
+///       count--;
+///     });
+///   }
+/// }
+///
+/// ```
 class ULoCProvider with ChangeNotifier {
   /// The context of the provider.
   BuildContext context;
@@ -15,6 +63,7 @@ class ULoCProvider with ChangeNotifier {
     return context.routeArguments;
   }
 
+  /// Access ULoC arguments
   Map<String, dynamic>? get ulocArguments {
     if (context.routeArguments is UlocArguments) {
       return (context.routeArguments as UlocArguments).argumentsMap;
@@ -97,18 +146,22 @@ class ULoCProvider with ChangeNotifier {
     }
   }
 
+  /// Run when provider created
   void onInit() {
     _RouteUtilities.log('$runtimeType created');
   }
 
+  /// Run after widget finish render
   void onReady() {
     _RouteUtilities.log('$runtimeType ready');
   }
 
+  /// Run when widget disposed
   void onDispose() {
     _RouteUtilities.log('$runtimeType disposed');
   }
 
+  /// update state
   void setstate([FutureOr<void> Function()? fn]) async {
     if (!mounted) return;
     if (fn != null) {
@@ -118,10 +171,12 @@ class ULoCProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// log
   void printLog([Object? message]) {
     _RouteUtilities.log('[$runtimeType]: $message');
   }
 
+  /// navigational function
   void pop<T extends Object?>([T? result]) {
     if (context.hasParentRoute) {
       Navigator.of(context).pop<T>(result);
@@ -130,6 +185,7 @@ class ULoCProvider with ChangeNotifier {
     }
   }
 
+  /// navigational function
   void popUntil(ULoCRoute route) {
     if (context.hasParentRoute) {
       Navigator.of(context).popUntil(ModalRoute.withName(route.name));
@@ -138,6 +194,7 @@ class ULoCProvider with ChangeNotifier {
     }
   }
 
+  /// navigational function
   Future<T?> getTo<T, P>(
     ULoCRoute route, {
     Object? arguments,
@@ -159,6 +216,7 @@ class ULoCProvider with ChangeNotifier {
     ).pushNamed<T>(route.path, arguments: ulocArguments);
   }
 
+  /// navigational function
   Future<T?> off<T, J>(
     ULoCRoute route, {
     Object? arguments,
@@ -183,6 +241,7 @@ class ULoCProvider with ChangeNotifier {
     );
   }
 
+  /// navigational function
   Future<T?> offAll<T>(
     ULoCRoute route, {
     Object? arguments,
@@ -206,6 +265,7 @@ class ULoCProvider with ChangeNotifier {
     );
   }
 
+  /// navigational function
   Future<T?> addRoute<T, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
@@ -233,6 +293,7 @@ class ULoCProvider with ChangeNotifier {
     );
   }
 
+  /// navigational function
   Future<T?> replaceRoute<T, J, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
@@ -261,6 +322,7 @@ class ULoCProvider with ChangeNotifier {
     );
   }
 
+  /// navigational function
   Future<T?> replaceAllRoute<T, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,

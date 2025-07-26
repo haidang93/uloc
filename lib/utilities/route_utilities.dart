@@ -48,9 +48,9 @@ class _RouteUtilities {
     flutterArguments: flutterArguments,
     argumentsMap: {
       ...arguments,
-      transitionParamKey: transition?.name,
-      curveParamKey: curve?.name,
-      ancestorContextsKey: ancestorContexts ?? [],
+      _transitionParamKey: transition?.name,
+      _curveParamKey: curve?.name,
+      _ancestorContextsKey: ancestorContexts ?? [],
     },
   );
 

@@ -1,5 +1,5 @@
 part of '../../uloc.dart';
 
-const transitionParamKey = '@transition';
-const curveParamKey = '@curve';
-const ancestorContextsKey = '@ancestorContexts';
+const _transitionParamKey = '@transition';
+const _curveParamKey = '@curve';
+const _ancestorContextsKey = '@ancestorContexts';

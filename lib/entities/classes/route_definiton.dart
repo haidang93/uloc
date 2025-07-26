@@ -45,11 +45,18 @@ class ULoCRouteDefine<P extends ULoCProvider> {
     required this.provider,
     required this.child,
   });
+
+  /// route
   final String route;
+
+  /// provider
   final P Function(BuildContext context, ULoCRoute? route) provider;
+
+  /// child of widget
   final Type child;
 }
 
+/// Map \<RouteName, Properties\>
 abstract class ULoCRouteDeclaration {
   /// Map \<RouteName, Properties\>
   Map<String, ULoCRouteDefine> get route;

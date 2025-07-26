@@ -66,6 +66,7 @@ part 'widgets/lifecycle_widget.dart';
 /// ```
 
 class ULoCRouteConfiguration {
+  ///
   ULoCRouteConfiguration(List<RouteProperties> routes)
     : _configuration = _RoutesConfiguration(routes);
   final _RoutesConfiguration _configuration;

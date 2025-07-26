@@ -37,13 +37,13 @@ class _RoutesConfiguration {
     List<BuildContext> ancestorContexts = [];
     final arguments = settings.arguments;
     if (arguments is UlocArguments) {
-      final transitionName = arguments.argumentsMap?[transitionParamKey];
+      final transitionName = arguments.argumentsMap?[_transitionParamKey];
       transition = PageTransition.values.firstWhere(
         (e) => e.name == transitionName,
         orElse: () => PageTransition.none,
       );
-      curve = arguments.argumentsMap?[curveParamKey] ?? CurveEnum.ease.curve;
-      ancestorContexts = arguments.argumentsMap?[ancestorContextsKey] ?? [];
+      curve = arguments.argumentsMap?[_curveParamKey] ?? CurveEnum.ease.curve;
+      ancestorContexts = arguments.argumentsMap?[_ancestorContextsKey] ?? [];
     }
 
     // Handle routes with parameters

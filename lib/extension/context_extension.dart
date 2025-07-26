@@ -1,23 +1,23 @@
 part of '../uloc.dart';
 
-const _deprecatedText =
-    '''Navigational function is deprecated. Please nagivate using function from ULoCProvider
+// const _deprecatedText =
+//     '''Navigational function is deprecated. Please nagivate using function from ULoCProvider
 
-    ```dart
-    class MyController extends ULoCProvider {
-      MyController(super.context);
+//     ```dart
+//     class MyController extends ULoCProvider {
+//       MyController(super.context);
 
-      @override
-      void onReady() {
-        super.onReady();
-        getTo(Routes.Home);
-      }
-    }
-    ```
+//       @override
+//       void onReady() {
+//         super.onReady();
+//         getTo(Routes.Home);
+//       }
+//     }
+//     ```
 
+//     ''';
 
-    ''';
-
+/// context utilities
 extension ContextExtension on BuildContext {
   void closeKeyboard() {
     final FocusScopeNode currentScope = FocusScope.of(this);
@@ -33,13 +33,6 @@ extension ContextExtension on BuildContext {
   /// Route Name of this page
   Uri get location => Uri.parse(ModalRoute.of(this)?.settings.name ?? '');
 
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
-  ///
   /// navigational methods
   void pop<T extends Object?>([T? result]) {
     if (hasParentRoute) {
@@ -49,6 +42,7 @@ extension ContextExtension on BuildContext {
     }
   }
 
+  /// navigational methods
   void popUntil(String routeName) {
     if (hasParentRoute) {
       Navigator.of(this).popUntil(ModalRoute.withName(routeName));
@@ -57,6 +51,7 @@ extension ContextExtension on BuildContext {
     }
   }
 
+  /// navigational methods
   Future<T?> getTo<T>(
     ULoCRoute route, {
     Object? arguments,
@@ -77,6 +72,7 @@ extension ContextExtension on BuildContext {
     ).pushNamed<T>(route.path, arguments: ulocArguments);
   }
 
+  /// navigational methods
   Future<T?> off<T, J>(
     ULoCRoute route, {
     Object? arguments,
@@ -100,6 +96,7 @@ extension ContextExtension on BuildContext {
     );
   }
 
+  /// navigational methods
   Future<T?> offAll<T>(
     ULoCRoute route, {
     Object? arguments,
@@ -122,6 +119,7 @@ extension ContextExtension on BuildContext {
     );
   }
 
+  /// navigational methods
   Future<T?> addRoute<T, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
@@ -150,7 +148,7 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  @Deprecated(_deprecatedText)
+  /// navigational methods
   Future<T?> replaceRoute<T, J, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
@@ -179,7 +177,7 @@ extension ContextExtension on BuildContext {
     );
   }
 
-  @Deprecated(_deprecatedText)
+  /// navigational methods
   Future<T?> replaceAllRoute<T, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
