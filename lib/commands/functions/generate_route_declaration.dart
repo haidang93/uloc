@@ -52,7 +52,7 @@ Future generateRouteDeclaration({
 
   final params = pageParameters.map((e) => "$e: route?.param('$e')").join(', ');
   final arguments = pageArgs.entries
-      .map((e) => "${e.value}: route?.arguments<${e.key}>('${e.value}')")
+      .map((e) => "${e.key}: route?.arguments<${e.value}>('${e.key}')")
       .join(', ');
 
   final functionParam = [

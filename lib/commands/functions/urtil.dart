@@ -67,8 +67,8 @@ Map<String, String> extractArguments(String source) {
   final Map<String, String> result = {};
 
   for (final match in matches) {
-    final type = match.group(1)!; // e.g., int
-    final name = match.group(2)!; // e.g., number
+    final type = match.group(2)!; // e.g., int
+    final name = match.group(1)!; // e.g., number
     result[type] = name;
   }
 

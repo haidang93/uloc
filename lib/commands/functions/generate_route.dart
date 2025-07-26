@@ -107,7 +107,7 @@ String _buildRouteName(String name, String value, Map<String, String> args) {
 
     final params = paramList.map((e) => 'String? $e').join(', ');
     final arguments = args.entries
-        .map((e) => '${e.key}? ${e.value}')
+        .map((e) => '${e.value}? ${e.key}')
         .join(', ');
 
     final functionParam = [
@@ -118,7 +118,7 @@ String _buildRouteName(String name, String value, Map<String, String> args) {
         ? ', routeParams: [${paramList.join(', ')}]'
         : '';
     final argumentsText = args.isNotEmpty
-        ? ", arguments: {${args.values.map((e) => "'$e': $e").join(', ')}}"
+        ? ", arguments: {${args.keys.map((e) => "'$e': $e").join(', ')}}"
         : '';
 
     return "  static ULoCRoute $name({$functionParam}) => ULoCRoute( '$value'$routeParams$argumentsText );";

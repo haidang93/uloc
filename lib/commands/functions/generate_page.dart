@@ -40,7 +40,7 @@ Future generatePage(ArgResults cmdArgs) async {
       if (e.split('-').length == 2) {
         String name = e.split('-').first;
         String type = e.split('-').last;
-        return MapEntry(type, name);
+        return MapEntry(name, type);
       }
       throw Exception('Failed to resolve page argument $e');
     }),
@@ -114,14 +114,14 @@ Future generatePage(ArgResults cmdArgs) async {
   result.add('  @override');
   result.add('  Widget build(BuildContext context) {');
   result.add('    return Scaffold(');
-  if (pageParameters.contains('name') || args.containsValue('name')) {
+  if (pageParameters.contains('name') || args.containsKey('name')) {
     result.add(
       '      appBar: AppBar(title: Text(watch.name ?? "${snakeToPascal(pageName)}")),',
     );
   } else {
     result.add('      appBar: AppBar(title: Text(watch.name)),');
   }
-  if (pageParameters.contains('content') || args.containsValue('content')) {
+  if (pageParameters.contains('content') || args.containsKey('content')) {
     result.add(
       '      body: Center(child: Text(watch.content ?? "${snakeToPascal(pageName)} has not yet implemented")),',
     );
@@ -159,20 +159,20 @@ Future generatePage(ArgResults cmdArgs) async {
       result.add('  final String? $paramName;');
     }
     for (var arg in args.entries) {
-      result.add('  final ${arg.key}? ${arg.value};');
+      result.add('  final ${arg.value}? ${arg.key};');
     }
     final param = [
       ...pageParameters,
-      ...args.values,
+      ...args.keys,
     ].map((e) => 'this.$e').join(', ');
     result.add('  $controllerClassName(super.context, {$param});');
   } else {
     result.add('  $controllerClassName(super.context);');
   }
-  if (!pageParameters.contains('name') && !args.containsValue('name')) {
+  if (!pageParameters.contains('name') && !args.containsKey('name')) {
     result.add('  String name = "${snakeToPascal(pageName)}";');
   }
-  if (!pageParameters.contains('content') && !args.containsValue('content')) {
+  if (!pageParameters.contains('content') && !args.containsKey('content')) {
     result.add(
       '  String content = "${snakeToPascal(pageName)} has not yet implemented";',
     );
