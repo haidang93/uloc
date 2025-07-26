@@ -57,63 +57,71 @@ extension ContextExtension on BuildContext {
     }
   }
 
-  @Deprecated(_deprecatedText)
   Future<T?> getTo<T>(
-    String routeName, {
+    ULoCRoute route, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('getTo $routeName');
-
+    _RouteUtilities.log('getTo ${route.path}');
     closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+    );
     return await Navigator.of(
       this,
-    ).pushNamed<T>(uri.toString(), arguments: arguments);
+    ).pushNamed<T>(route.path, arguments: ulocArguments);
   }
 
-  @Deprecated(_deprecatedText)
   Future<T?> off<T, J>(
-    String routeName, {
+    ULoCRoute route, {
     Object? arguments,
     J? result,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('off $routeName');
-
+    _RouteUtilities.log('off ${route.path}');
     closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+    );
     return await Navigator.of(this).pushReplacementNamed<T, J>(
-      uri.toString(),
+      route.path,
       result: result,
-      arguments: arguments,
+      arguments: ulocArguments,
     );
   }
 
-  @Deprecated(_deprecatedText)
   Future<T?> offAll<T>(
-    String routeName, {
+    ULoCRoute route, {
     Object? arguments,
     PageTransition? transition,
     CurveEnum? curve,
   }) async {
-    _RouteUtilities.log('offAll $routeName');
-
+    _RouteUtilities.log('offAll ${route.path}');
     closeKeyboard();
-    Uri uri = Uri.parse(routeName);
-    uri = _processRouteQuery(uri, transition, curve);
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+    );
     return await Navigator.of(this).pushNamedAndRemoveUntil<T>(
-      uri.toString(),
+      route.path,
       (route) => false,
-      arguments: arguments,
+      arguments: ulocArguments,
     );
   }
 
-  @Deprecated(_deprecatedText)
   Future<T?> addRoute<T, P extends ULoCProvider>(
     Widget screen, {
     P Function(BuildContext context)? provider,
@@ -204,20 +212,6 @@ extension ContextExtension on BuildContext {
         } else {
           return false;
         }
-      },
-    );
-  }
-
-  Uri _processRouteQuery(
-    Uri uri,
-    PageTransition? transition,
-    CurveEnum? curve,
-  ) {
-    return uri.replace(
-      queryParameters: {
-        ...uri.queryParametersAll,
-        transitionParamKey: transition?.name,
-        if (curve != null) curveParamKey: curve.name,
       },
     );
   }

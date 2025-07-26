@@ -36,6 +36,24 @@ class _RouteUtilities {
     }
   }
 
+  static UlocArguments buildUlocArguments({
+    required ULoCRoute route,
+    List<BuildContext>? ancestorContexts,
+    Object? flutterArguments,
+    Map<String, dynamic> arguments = const {},
+    PageTransition? transition,
+    CurveEnum? curve,
+  }) => UlocArguments._private(
+    route: route,
+    flutterArguments: flutterArguments,
+    argumentsMap: {
+      ...arguments,
+      transitionParamKey: transition?.name,
+      curveParamKey: curve?.name,
+      ancestorContextsKey: ancestorContexts ?? [],
+    },
+  );
+
   static Widget buildTransition(
     BuildContext context,
     Animation<double> animation,

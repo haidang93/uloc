@@ -146,13 +146,13 @@ class ULoCProvider with ChangeNotifier {
   }) async {
     _RouteUtilities.log('getTo ${route.path}');
     context.closeKeyboard();
-    final ulocArguments = _buildUlocArguments(
-      route,
-      arguments,
-      route._arguments,
-      transition,
-      curve,
-      _ancestorContexts,
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+      ancestorContexts: _ancestorContexts,
     );
     return await Navigator.of(
       context,
@@ -168,13 +168,13 @@ class ULoCProvider with ChangeNotifier {
   }) async {
     _RouteUtilities.log('off ${route.path}');
     context.closeKeyboard();
-    final ulocArguments = _buildUlocArguments(
-      route,
-      arguments,
-      route._arguments,
-      transition,
-      curve,
-      _ancestorContexts,
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+      ancestorContexts: _ancestorContexts,
     );
     return await Navigator.of(context).pushReplacementNamed<T, J>(
       route.path,
@@ -191,13 +191,13 @@ class ULoCProvider with ChangeNotifier {
   }) async {
     _RouteUtilities.log('offAll ${route.path}');
     context.closeKeyboard();
-    final ulocArguments = _buildUlocArguments(
-      route,
-      arguments,
-      route._arguments,
-      transition,
-      curve,
-      _ancestorContexts,
+    final ulocArguments = _RouteUtilities.buildUlocArguments(
+      route: route,
+      flutterArguments: arguments,
+      arguments: route._arguments,
+      transition: transition,
+      curve: curve,
+      ancestorContexts: _ancestorContexts,
     );
     return await Navigator.of(context).pushNamedAndRemoveUntil<T>(
       route.path,
@@ -296,24 +296,6 @@ class ULoCProvider with ChangeNotifier {
       },
     );
   }
-
-  UlocArguments _buildUlocArguments(
-    ULoCRoute route,
-    Object? flutterArguments,
-    Map<String, dynamic> arguments,
-    PageTransition? transition,
-    CurveEnum? curve,
-    List<BuildContext> ancestorContexts,
-  ) => UlocArguments._private(
-    route: route,
-    flutterArguments: flutterArguments,
-    argumentsMap: {
-      ...arguments,
-      transitionParamKey: transition?.name,
-      curveParamKey: curve?.name,
-      ancestorContextsKey: _ancestorContexts,
-    },
-  );
 
   Route<T> _buildRoute<T>({
     required Widget page,
