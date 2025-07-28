@@ -61,7 +61,7 @@ Map<String, RouteDeclaration> parseULoCRoutesToJson(String source) {
 }
 
 Map<String, String> extractArguments(String source) {
-  final regex = RegExp(r"arguments<(\w+)>\(\s*'(\w+)'\s*\)");
+  final regex = RegExp(r"arguments<([^>]+)>\(\s*'([^']+)'\s*\)");
   final matches = regex.allMatches(source);
 
   final Map<String, String> result = {};
