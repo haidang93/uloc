@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.24]
+
+### ✨ Update
+
+- Add upgrade command
+
 ## [1.0.23]
 
 ### ✨ Update
