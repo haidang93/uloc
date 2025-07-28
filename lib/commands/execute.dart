@@ -5,6 +5,7 @@ import 'package:uloc/commands/command.dart';
 import 'package:uloc/commands/const.dart';
 import 'package:uloc/commands/functions/generate_page.dart';
 import 'package:uloc/commands/functions/generate_route.dart';
+import 'package:uloc/commands/functions/upgrade.dart';
 
 class ExecuteCommand {
   final Command _command;
@@ -13,6 +14,11 @@ class ExecuteCommand {
   void run() async {
     try {
       final cmdArgs = _command.cmdArgs;
+
+      if ([CommandFlag.upgrade].contains(cmdArgs.command?.name)) {
+        upgrade();
+        return;
+      }
 
       if ([
         CommandFlag.genPage,

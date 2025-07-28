@@ -15,6 +15,7 @@ class Command {
   String _globalUsageText = '';
 
   final _commands = <CMDPros>[
+    CMDPros(name: [CommandFlag.upgrade], help: "Update to latest version."),
     CMDPros(
       name: [CommandFlag.genRoute, CommandFlag.genRoute.shortHand],
       parser: ArgParser()

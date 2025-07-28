@@ -1,4 +1,5 @@
 class CommandFlag {
+  static const upgrade = 'upgrade';
   static const genRoute = 'gen-route';
   static const genPage = 'gen-page';
   static const help = 'help';
