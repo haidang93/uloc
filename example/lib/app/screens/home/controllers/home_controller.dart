@@ -9,18 +9,18 @@ class HomeController extends ULoCProvider {
   final detail = Detail();
 
   @override
-  void onInit() {
-    super.onInit();
+  void init() {
+    super.init();
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void ready() {
+    super.ready();
   }
 
   @override
-  void onDispose() {
-    super.onDispose();
+  void dispose() {
+    super.dispose();
   }
 
   void nextRouteHandle() {

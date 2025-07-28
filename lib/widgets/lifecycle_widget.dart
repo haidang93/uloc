@@ -20,20 +20,14 @@ class RouteWithProviderState<P extends ULoCProvider>
     super.initState();
 
     controller = context.read<P>();
-    controller.onInit();
+    controller.init();
     controller._ancestorContexts = [
       ...(widget._ancestorContext ?? []),
       context,
     ];
     WidgetsBinding.instance.addPostFrameCallback((t) {
-      controller.onReady();
+      controller.ready();
     });
-  }
-
-  @override
-  void dispose() {
-    controller.onDispose();
-    super.dispose();
   }
 
   @override

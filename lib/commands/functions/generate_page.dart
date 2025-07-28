@@ -179,18 +179,18 @@ Future generatePage(ArgResults cmdArgs) async {
   }
   result.add('');
   result.add('  @override');
-  result.add('  void onInit() {');
-  result.add('    super.onInit();');
+  result.add('  void init() {');
+  result.add('    super.init();');
   result.add('  }');
   result.add('');
   result.add('  @override');
-  result.add('  void onReady() {');
-  result.add('    super.onReady();');
+  result.add('  void ready() {');
+  result.add('    super.ready();');
   result.add('  }');
   result.add('');
   result.add('  @override');
-  result.add('  void onDispose() {');
-  result.add('    super.onDispose();');
+  result.add('  void dispose() {');
+  result.add('    super.dispose();');
   result.add('  }');
   result.add('');
   result.add('}');

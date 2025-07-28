@@ -11,8 +11,8 @@ part of '../../uloc.dart';
 ///   int count = 0;
 ///
 ///   @override
-///   void onInit() {
-///     super.onInit();
+///   void init() {
+///     super.init();
 ///
 ///     // get query from route
 ///     String utmSource = query('utm_source');
@@ -26,13 +26,13 @@ part of '../../uloc.dart';
 ///   }
 ///
 ///   @override
-///   void onReady() {
-///     super.onReady();
+///   void ready() {
+///     super.ready();
 ///   }
 ///
 ///   @override
-///   void onDispose() {
-///     super.onDispose();
+///   void dispose() {
+///     super.dispose();
 ///   }
 ///
 ///   void increment() {
@@ -147,17 +147,19 @@ class ULoCProvider with ChangeNotifier {
   }
 
   /// Run when provider created
-  void onInit() {
+  void init() {
     _RouteUtilities.log('$runtimeType created');
   }
 
   /// Run after widget finish render
-  void onReady() {
+  void ready() {
     _RouteUtilities.log('$runtimeType ready');
   }
 
   /// Run when widget disposed
-  void onDispose() {
+  @override
+  void dispose() {
+    super.dispose();
     _RouteUtilities.log('$runtimeType disposed');
   }
 

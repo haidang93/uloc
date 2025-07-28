@@ -57,7 +57,7 @@ class ULoCRoute {
     try {
       final value = _arguments[key];
       if (value == null) {
-        throw Exception("Cannot find arguments of name $key");
+        return null;
       } else if (value is! T) {
         throw Exception("Cannot find arguments of type $T");
       } else {

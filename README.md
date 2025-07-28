@@ -181,8 +181,8 @@ class DetailController extends ULoCProvider {
   int count = 0;
 
   @override
-  void onInit() {
-    super.onInit();
+  void init() {
+    super.init();
 
     // get query from route
     String utmSource = query('utm_source');
@@ -196,13 +196,13 @@ class DetailController extends ULoCProvider {
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void ready() {
+    super.ready();
   }
 
   @override
-  void onDispose() {
-    super.onDispose();
+  void dispose() {
+    super.dispose();
   }
 
   void increment() {
