@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.23]
+
+### ✨ Update
+
+- Improve state lifecycle
+- Improve parser
+
 ## [1.0.22]
 
 ### ✨ Update
