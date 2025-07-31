@@ -8,13 +8,16 @@ import 'package:provider/provider.dart';
 
 export 'package:provider/provider.dart';
 
-part 'entities/classes/annotation.dart';
-part 'entities/classes/route_congiguration.dart';
-part 'entities/classes/route_definiton.dart';
-part 'entities/classes/route_properties.dart';
-part 'entities/classes/uloc_arguments.dart';
-part 'entities/classes/uloc_provider.dart';
-part 'entities/classes/uloc_route.dart';
+part 'entities/modules/widget_navigation_module.dart';
+part 'entities/foundation/annotation.dart';
+part 'entities/foundation/route_congiguration.dart';
+part 'entities/foundation/route_definiton.dart';
+part 'entities/foundation/route_properties.dart';
+part 'entities/foundation/uloc_arguments.dart';
+part 'entities/base_providers/uloc_provider.dart';
+part 'entities/base_providers/uloc_stateless_provider.dart';
+part 'entities/base_providers/uloc_provider_interface.dart';
+part 'entities/foundation/uloc_route.dart';
 part 'entities/const.dart';
 part 'entities/custom_types/custom_types.dart';
 part 'entities/enums/curves_enum.dart';

@@ -11,13 +11,13 @@ class DetailController extends ULoCProvider {
   int count = 0;
 
   @override
-  void init() {
-    super.init();
+  void onInit() {
+    super.onInit();
   }
 
   @override
-  void ready() {
-    super.ready();
+  void onReady() {
+    super.onReady();
   }
 
   @override
@@ -27,11 +27,11 @@ class DetailController extends ULoCProvider {
 
   void increment() {
     count++;
-    setstate();
+    setState();
   }
 
   void decrement() {
-    setstate(() {
+    setState(() {
       count--;
     });
   }

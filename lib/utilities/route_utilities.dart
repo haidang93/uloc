@@ -54,6 +54,40 @@ class _RouteUtilities {
     },
   );
 
+  static Route<T> buildRoute<T>({
+    required Widget page,
+    dynamic arguments,
+    String? name,
+    PageTransition? transition,
+    Curve curve = Curves.ease,
+  }) {
+    final settings = RouteSettings(
+      arguments: arguments,
+      name: name ?? page.runtimeType.toString(),
+    );
+
+    Route<T> route;
+    if (transition == null) {
+      route = MaterialPageRoute(builder: (_) => page, settings: settings);
+    } else {
+      route = PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return buildTransition(
+            context,
+            animation,
+            secondaryAnimation,
+            child,
+            curve,
+            transition,
+          );
+        },
+        settings: settings,
+      );
+    }
+    return route;
+  }
+
   static Widget buildTransition(
     BuildContext context,
     Animation<double> animation,

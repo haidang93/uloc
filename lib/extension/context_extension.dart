@@ -138,7 +138,7 @@ extension ContextExtension on BuildContext {
     }
 
     return await Navigator.of(this).push<T>(
-      _buildRoute(
+      _RouteUtilities.buildRoute(
         page: screenWidget,
         arguments: arguments,
         name: name,
@@ -167,7 +167,7 @@ extension ContextExtension on BuildContext {
     }
 
     return await Navigator.of(this).pushReplacement<T, J>(
-      _buildRoute(
+      _RouteUtilities.buildRoute(
         page: screenWidget,
         arguments: arguments,
         name: name,
@@ -197,7 +197,7 @@ extension ContextExtension on BuildContext {
     }
 
     return await Navigator.of(this).pushAndRemoveUntil<T>(
-      _buildRoute(
+      _RouteUtilities.buildRoute(
         page: screenWidget,
         arguments: arguments,
         name: name,
@@ -212,40 +212,6 @@ extension ContextExtension on BuildContext {
         }
       },
     );
-  }
-
-  Route<T> _buildRoute<T>({
-    required Widget page,
-    dynamic arguments,
-    String? name,
-    PageTransition? transition,
-    Curve curve = Curves.ease,
-  }) {
-    final settings = RouteSettings(
-      arguments: arguments,
-      name: name ?? page.runtimeType.toString(),
-    );
-
-    Route<T> route;
-    if (transition == null) {
-      route = MaterialPageRoute(builder: (_) => page, settings: settings);
-    } else {
-      route = PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => page,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return _RouteUtilities.buildTransition(
-            context,
-            animation,
-            secondaryAnimation,
-            child,
-            curve,
-            transition,
-          );
-        },
-        settings: settings,
-      );
-    }
-    return route;
   }
 
   Widget _buildCustomWidgetPage<P extends ULoCProvider>(

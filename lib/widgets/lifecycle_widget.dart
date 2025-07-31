@@ -8,10 +8,10 @@ class _RouteWithProvider<P extends ULoCProvider> extends StatefulWidget {
   final Widget child;
   final List<BuildContext>? _ancestorContext;
   @override
-  State<_RouteWithProvider> createState() => RouteWithProviderState<P>();
+  State<_RouteWithProvider> createState() => _RouteWithProviderState<P>();
 }
 
-class RouteWithProviderState<P extends ULoCProvider>
+class _RouteWithProviderState<P extends ULoCProvider>
     extends State<_RouteWithProvider> {
   late P controller;
 
@@ -20,13 +20,13 @@ class RouteWithProviderState<P extends ULoCProvider>
     super.initState();
 
     controller = context.read<P>();
-    controller.init();
+    controller.onInit();
     controller._ancestorContexts = [
       ...(widget._ancestorContext ?? []),
       context,
     ];
     WidgetsBinding.instance.addPostFrameCallback((t) {
-      controller.ready();
+      controller.onReady();
     });
   }
 
