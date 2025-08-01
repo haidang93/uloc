@@ -2,70 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.24]
+## [1.1.0]
 
-### ✨ Update
+- Add stateless provider
+- Improve functionality
+
+## [1.0.24]
 
 - Add upgrade command
 
 ## [1.0.23]
-
-### ✨ Update
 
 - Improve state lifecycle
 - Improve parser
 
 ## [1.0.22]
 
-### ✨ Update
-
 - Improve navigation
 
 ## [1.0.21]
-
-### ✨ Update
 
 - Fix bug
 
 ## [1.0.20]
 
-### ✨ Update
-
 - Fix bug
 
 ## [1.0.19]
-
-### ✨ Update
 
 - Fix bug
 
 ## [1.0.18]
 
-### ✨ Update
-
 - Fix bug
 
 ## [1.0.17]
-
-### ✨ Update
 
 - Fix bug
 
 ## [1.0.16]
 
-### ✨ Update
-
 - Fix bug
 
 ## [1.0.15]
 
-### ✨ Update
-
 - Fix CLI import
 
 ## [1.0.14]
-
-### ✨ Update
 
 - Can access to controllers from previous route
 - Support type safe parameter
@@ -73,8 +56,6 @@ All notable changes to this project will be documented in this file.
 ## [1.0.13]
 
 🎉 Initial release!
-
-### ✨ Features
 
 - CLI command: `uloc gen-route` / `uloc gr` to generate routing files from `@ULoCDeclaration`.
 - CLI command: `uloc gen-page` / `uloc gp` to scaffold new widget pages with view/controller structure.

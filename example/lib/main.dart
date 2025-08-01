@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uloc/uloc.dart';
 import 'package:uloc_example/routes/routes.uloc.g.dart';
 
 void main() {
@@ -10,13 +11,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ULoC Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return Provider(
+      create: (context) => SDasdf(context),
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            title: context.read<SDasdf>().text,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            ),
+            initialRoute: Routes.HOME.name,
+            onGenerateRoute: Routes.ulocRouteConfiguration.routeBuilder,
+          );
+        },
       ),
-      initialRoute: Routes.HOME.name,
-      onGenerateRoute: Routes.ulocRouteConfiguration.routeBuilder,
     );
+  }
+}
+
+class SDasdf extends ULoCStatelessProvider {
+  SDasdf(super.context);
+  String text = 'asdasd';
+
+  @override
+  void onCreate() {
+    super.onCreate();
+    print('object');
   }
 }
