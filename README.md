@@ -93,6 +93,10 @@ uloc gp home -g -r lib/routes/routes.dart -t lib/routes/routes.uloc.g.dart
 # Please manually import class path after generate
 uloc gp detail_page --add-page-arg data-BookDetail -g
 
+# the <> characters in List<String> may confuse the shell (especially on Windows)
+# use [] for workaround
+uloc gp some_page -a listData-List[String] -g
+
 ```
 
 ## Route Declaration Example

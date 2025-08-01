@@ -40,7 +40,7 @@ Future generatePage(ArgResults cmdArgs) async {
       if (e.split('-').length == 2) {
         String name = e.split('-').first;
         String type = e.split('-').last;
-        return MapEntry(name, type);
+        return MapEntry(name, type.replaceAll('[', '<').replaceAll(']', '>'));
       }
       throw Exception('Failed to resolve page argument $e');
     }),
