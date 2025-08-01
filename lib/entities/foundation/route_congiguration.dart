@@ -17,6 +17,7 @@ class _RoutesConfiguration {
     final declaredRouteName = _getDeclaredRoute(uri);
     // Handle unknown routes
     if (declaredRouteName == null) {
+      // prevent Flutter default root route exception
       if (settings.name == '/') {
         return MaterialPageRoute(
           builder: (context) => Scaffold(),
@@ -29,14 +30,20 @@ class _RoutesConfiguration {
         'Hint: Check for typos or missing route declarations in your routes.dart.',
       );
     }
+
     final param = _RouteUtilities._parseParam(declaredRouteName, uri);
-    final ulocRoute = ULoCRoute(declaredRouteName.path, routeParams: param);
+    final ULoCRoute ulocRoute;
 
     PageTransition transition = PageTransition.none;
     Curve curve = CurveEnum.ease.curve;
     List<BuildContext> ancestorContexts = [];
     final arguments = settings.arguments;
     if (arguments is UlocArguments) {
+      ulocRoute = ULoCRoute(
+        declaredRouteName.path,
+        routeParams: param,
+        arguments: arguments.argumentsMap,
+      );
       final transitionName = arguments.argumentsMap?[_transitionParamKey];
       transition = PageTransition.values.firstWhere(
         (e) => e.name == transitionName,
@@ -44,6 +51,8 @@ class _RoutesConfiguration {
       );
       curve = arguments.argumentsMap?[_curveParamKey] ?? CurveEnum.ease.curve;
       ancestorContexts = arguments.argumentsMap?[_ancestorContextsKey] ?? [];
+    } else {
+      ulocRoute = ULoCRoute(declaredRouteName.path, routeParams: param);
     }
 
     // Handle routes with parameters
