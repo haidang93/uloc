@@ -179,13 +179,13 @@ Future generatePage(ArgResults cmdArgs) async {
   }
   result.add('');
   result.add('  @override');
-  result.add('  void init() {');
-  result.add('    super.init();');
+  result.add('  void onInit() {');
+  result.add('    super.onInit();');
   result.add('  }');
   result.add('');
   result.add('  @override');
-  result.add('  void ready() {');
-  result.add('    super.ready();');
+  result.add('  void onReady() {');
+  result.add('    super.onReady();');
   result.add('  }');
   result.add('');
   result.add('  @override');
