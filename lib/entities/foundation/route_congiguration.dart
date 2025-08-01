@@ -2,14 +2,14 @@ part of '../../uloc.dart';
 
 class _RoutesConfiguration {
   _RoutesConfiguration(List<RouteProperties> routes) {
-    final RouteMap result = {};
+    final _RouteMap result = {};
     for (var route in routes) {
       result[route.routeName.name] = route.buildRouteMapElement;
     }
     _routes = result;
   }
 
-  RouteMap _routes = {};
+  _RouteMap _routes = {};
 
   Route<dynamic>? routeBuilder(RouteSettings settings) {
     // reconstruct ULoCRoute from string

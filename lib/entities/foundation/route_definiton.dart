@@ -1,14 +1,15 @@
 part of '../../uloc.dart';
 
-/// Route definition:
+/// Route definition class.
 ///
-/// The developer will use this class to define routes
+/// This class is used by developers to declare routes for the application.
+/// It serves as a base for code generation, where the `uloc` generator will
+/// use these declarations to generate route configurations.
 ///
-/// The code generator will base on this definition to generate route configuration
-///
+/// ### Example
 ///
 /// ```dart
-///  @ULoCDeclaration()
+/// @ULoCDeclaration()
 /// class MyRoutes extends ULoCRouteDeclaration {
 ///   @override
 ///   Map<String, ULoCRouteDefine<ULoCProvider>> get route => {
@@ -24,21 +25,28 @@ part of '../../uloc.dart';
 ///     ),
 ///     'DETAIL': ULoCRouteDefine(
 ///       route: '/detail/:id/:type',
-///       provider: (context, params) =>
-///           DetailController(context, id: params?['id'], type: params?['type']),
+///       provider: (context, params) => DetailController(
+///         context,
+///         id: params?['id'],
+///         type: params?['type'],
+///       ),
 ///       child: DetailPage,
 ///     ),
 ///   };
 /// }
 /// ```
 ///
-/// Developer can also use command
+/// ### Quick Route Generation
+///
+/// Developers can also use the CLI to generate new pages and associated routes:
+///
 /// ```sh
 /// uloc gen-page home --gen-route
 /// # or
 /// uloc gen-page home -g
 /// ```
-/// to generate new page and route at the same time
+///
+/// This command generates both the page and route configuration automatically.
 class ULoCRouteDefine<P extends ULoCProvider> {
   ULoCRouteDefine({
     required this.route,
@@ -46,18 +54,52 @@ class ULoCRouteDefine<P extends ULoCProvider> {
     required this.child,
   });
 
-  /// route
+  /// Route pattern (e.g., '/', '/detail/:id').
   final String route;
 
-  /// provider
+  /// Provider function used to initialize the corresponding controller or state.
   final P Function(BuildContext context, ULoCRoute? route) provider;
 
-  /// child of widget
+  /// The widget class type to display for this route.
   final Type child;
 }
 
-/// Map \<RouteName, Properties\>
+/// Abstract class to be extended for route declaration.
+///
+/// Must override the [route] getter to provide a map of route names
+/// and their corresponding route definitions.
+///
+/// ### Example:
+///
+/// ```dart
+/// @ULoCDeclaration()
+/// class MyRoutes extends ULoCRouteDeclaration {
+///   @override
+///   Map<String, ULoCRouteDefine<ULoCProvider>> get route => {
+///     'WILDCARD': ULoCRouteDefine(
+///       route: '*',
+///       provider: (context, _) => HomeController(context),
+///       child: HomePage,
+///     ),
+///     'HOME': ULoCRouteDefine(
+///       route: '/',
+///       provider: (context, _) => HomeController(context),
+///       child: HomePage,
+///     ),
+///     'DETAIL': ULoCRouteDefine(
+///       route: '/detail/:id',
+///       provider: (context, route) => DetailController(
+///         context,
+///         id: route?.param('id'),
+///         data: route?.arguments<Detail>('data'),
+///       ),
+///       child: DetailPage,
+///     ),
+///   };
+/// }
+///
+/// ```
 abstract class ULoCRouteDeclaration {
-  /// Map \<RouteName, Properties\>
+  /// A map of route keys to [ULoCRouteDefine] configurations.
   Map<String, ULoCRouteDefine> get route;
 }
