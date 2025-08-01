@@ -371,6 +371,9 @@ abstract class ULoCProviderInterface {
   }) async {
     _RouteUtilities.log('off ${route.path}');
     context.closeKeyboard();
+    if (_ancestorContexts.isNotEmpty) {
+      _ancestorContexts.removeLast();
+    }
     final ulocArguments = _RouteUtilities.buildUlocArguments(
       route: route,
       flutterArguments: arguments,
@@ -412,7 +415,6 @@ abstract class ULoCProviderInterface {
       arguments: route._arguments,
       transition: transition,
       curve: curve,
-      ancestorContexts: _ancestorContexts,
     );
     return await Navigator.of(context).pushNamedAndRemoveUntil<T>(
       route.path,
